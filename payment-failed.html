@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Failed | SlokamTech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #050b16;
+      --text: #edf3ff;
+      --text-soft: #bfd0eb;
+      --line: rgba(122, 148, 198, 0.18);
+      --gold: #f5c542;
+      --danger: #f87171;
+      --shadow: 0 30px 70px rgba(5, 11, 22, 0.7);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: Inter, Segoe UI, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(248, 113, 113, 0.13), transparent 28%),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.14), transparent 26%),
+        var(--bg);
+    }
+    .nav {
+      border-bottom: 1px solid rgba(96, 165, 250, 0.14);
+      background: rgba(5, 11, 22, 0.76);
+      backdrop-filter: blur(18px);
+    }
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 900;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.85), rgba(96, 165, 250, 0.7));
+      color: white;
+      font-size: 0.72rem;
+    }
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 1.2rem;
+    }
+    .panel {
+      text-align: center;
+      background: linear-gradient(180deg, rgba(16, 23, 36, 0.96), rgba(12, 18, 28, 0.92));
+      border: 1px solid rgba(248, 113, 113, 0.2);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: clamp(1.4rem, 4vw, 2.4rem);
+    }
+    .status-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 1rem;
+      background: rgba(248, 113, 113, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.42);
+      color: var(--danger);
+      font-size: 2rem;
+    }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    p { color: var(--text-soft); }
+    .order {
+      margin: 1.6rem auto 0;
+      max-width: 520px;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.025);
+      color: var(--text-soft);
+      overflow-wrap: anywhere;
+    }
+    .order strong { color: var(--text); }
+    .actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      min-height: 48px;
+      padding: 0.8rem 1.25rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--gold), #d4a017); color: #0a1220; }
+    .btn-secondary { border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); color: var(--text); }
+    @media (max-width: 640px) {
+      .actions { flex-direction: column; }
+      .btn { width: 100%; }
+      .nav-inner { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="claude.html"><span class="brand-mark">&lt;/&gt;</span><span>SlokamTech</span></a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="panel">
+      <div class="status-icon"><i class="fas fa-times"></i></div>
+      <h1>Payment Failed</h1>
+      <p>Your payment could not be completed. Your registration has not been confirmed.</p>
+      <div class="order">Order ID: <strong id="orderId">-</strong></div>
+      <div class="actions">
+        <a class="btn btn-primary" href="claude.html#register"><i class="fas fa-rotate-right"></i> Try Payment Again</a>
+        <a class="btn btn-secondary" href="claude.html"><i class="fas fa-arrow-left"></i> Back to Workshop</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('orderId').textContent = params.get('order_id') || '-';
+  </script>
+</body>
+</html>

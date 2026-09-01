@@ -2,4 +2,6 @@ Flask
 flask-cors
 python-dotenv
 requests
+supabase
+reportlab
 gunicorn
