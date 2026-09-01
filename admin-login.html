@@ -96,7 +96,7 @@
 
     async function wakeBackend() {
       try {
-        await fetch(`${ADMIN_API}/api/health`, { method: 'GET', mode: 'no-cors' });
+        await fetch(`${ADMIN_API}/api/health`, { method: 'GET', credentials: 'include' });
       } catch (error) {
         // Ignore wake-up errors; the actual login will trigger the server if needed.
       }

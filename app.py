@@ -519,7 +519,12 @@ allowed_origins = {
     "http://127.0.0.1:5000",
     "http://localhost:5000",
 }
-CORS(app, resources={r"/api/*": {"origins": sorted(allowed_origins)}}, supports_credentials=True)
+CORS(
+    app,
+    resources={r"/api/*": {"origins": sorted(allowed_origins)}},
+    supports_credentials=True,
+    expose_headers=["Content-Type", "Authorization"],
+)
 
 
 @app.route("/admin-login", methods=["GET"])
