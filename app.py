@@ -494,6 +494,7 @@ def build_receipt_pdf(registration):
         ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#d8dee9")),
         ("VALIGN", (0, 0), (-1, -1), "TOP"),
         ("PADDING", (0, 0), (-1, -1), 8),
+        
     ]))
     story.extend([table, Spacer(1, 20), Paragraph("Thank you for registering.", styles["Normal"])])
     doc.build(story)
@@ -503,8 +504,14 @@ def build_receipt_pdf(registration):
 
 app = Flask(__name__)
 app.secret_key = ADMIN_SESSION_SECRET
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+
 allowed_origins = {
     FRONTEND_URL,
+    "https://slokamtech.com",
+    "https://www.slokamtech.com",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
     "http://127.0.0.1:5500",

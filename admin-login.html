@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | SlokamTech</title>
+  <style>
+    :root {
+      --bg: #08101c;
+      --panel: rgba(15, 23, 42, 0.92);
+      --line: rgba(96, 165, 250, 0.2);
+      --text: #edf3ff;
+      --muted: #bfd0eb;
+      --gold: #f5c542;
+      --gold-2: #d4a017;
+      --danger: #ffb4b4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(92vw, 420px);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+      padding: 2rem;
+    }
+    h1 {
+      margin: 0 0 1.25rem;
+      font-size: 1.9rem;
+      letter-spacing: -0.04em;
+    }
+    label {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    input {
+      width: 100%;
+      padding: 0.82rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid rgba(125, 211, 252, 0.25);
+      background: rgba(8, 12, 20, 0.95);
+      color: var(--text);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      color: #0a1220;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .message {
+      min-height: 1.2rem;
+      margin-top: 1rem;
+      color: var(--danger);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Admin Login</h1>
+    <form id="adminLoginForm">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" required />
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required />
+
+      <button type="submit">Login</button>
+    </form>
+    <div id="message" class="message"></div>
+  </div>
+
+  <script>
+    const ADMIN_API = 'https://slokamtech-backend.onrender.com';
+    const form = document.getElementById('adminLoginForm');
+    const message = document.getElementById('message');
+
+    async function wakeBackend() {
+      try {
+        await fetch(`${ADMIN_API}/api/health`, { method: 'GET', mode: 'no-cors' });
+      } catch (error) {
+        // Ignore wake-up errors; the actual login will trigger the server if needed.
+      }
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      message.textContent = 'Signing in...';
+
+      const payload = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
+      };
+
+      try {
+        const response = await fetch(`${ADMIN_API}/api/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          message.textContent = data.message || 'Invalid admin credentials.';
+          return;
+        }
+
+        window.location.href = '/admin.html';
+      } catch (error) {
+        message.textContent = 'Admin backend is unavailable right now. Please try again in a moment.';
+      }
+    });
+
+    wakeBackend();
+  </script>
+</body>
+</html>

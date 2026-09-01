@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | SlokamTech</title>
+  <style>
+    :root {
+      --bg: #08101c;
+      --panel: rgba(15, 23, 42, 0.92);
+      --line: rgba(96, 165, 250, 0.2);
+      --text: #edf3ff;
+      --muted: #bfd0eb;
+      --gold: #f5c542;
+      --gold-2: #d4a017;
+      --green: #96f7c4;
+      --amber: #f9e39e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      letter-spacing: -0.04em;
+    }
+    button {
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .stat-value {
+      margin-top: 0.45rem;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+    }
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+    th, td {
+      padding: 0.8rem 0.75rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: rgba(30, 41, 59, 0.9);
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.32rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .paid { background: rgba(52, 211, 153, 0.15); color: var(--green); }
+    .pending { background: rgba(245, 197, 66, 0.15); color: var(--amber); }
+    .error {
+      color: #ffd9d9;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Workshop Admin Dashboard</h1>
+    <button id="logoutBtn" type="button">Logout</button>
+  </div>
+
+  <div id="stats" class="stats"></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Course</th>
+          <th>Mode</th>
+          <th>Experience</th>
+          <th>Payment Status</th>
+          <th>Registration Status</th>
+          <th>Amount</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const ADMIN_API = 'https://slokamtech-backend.onrender.com';
+
+    async function loadDashboard() {
+      try {
+        const response = await fetch(`${ADMIN_API}/api/admin/dashboard`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            window.location.href = '/admin-login.html';
+            return;
+          }
+          document.getElementById('stats').innerHTML = '<div class="stat"><div class="stat-label">Error</div><div class="stat-value">' + (data.message || 'Unable to load dashboard') + '</div></div>';
+          return;
+        }
+
+        const stats = data.stats || {};
+        const rows = data.data || [];
+
+        document.getElementById('stats').innerHTML = `
+          <div class="stat"><div class="stat-label">Total Members</div><div class="stat-value">${stats.total_members || 0}</div></div>
+          <div class="stat"><div class="stat-label">Paid Members</div><div class="stat-value">${stats.paid_members || 0}</div></div>
+          <div class="stat"><div class="stat-label">Pending Members</div><div class="stat-value">${stats.pending_members || 0}</div></div>
+          <div class="stat"><div class="stat-label">Revenue</div><div class="stat-value">₹${Number(stats.total_revenue || 0).toLocaleString('en-IN')}</div></div>
+        `;
+
+        const tbody = document.getElementById('rows');
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="10">No registrations found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = rows.map((row) => {
+          const payment = (row.payment_status || 'PENDING').toUpperCase();
+          const registrationStatus = (row.registration_status || 'PAYMENT_PENDING').toUpperCase();
+          return `
+            <tr>
+              <td>${row.full_name || ''}</td>
+              <td>${row.email || ''}</td>
+              <td>${row.phone || ''}</td>
+              <td>${row.course_name || row.course_id || ''}</td>
+              <td>${row.mode || ''}</td>
+              <td>${row.experience_level || ''}</td>
+              <td><span class="badge ${payment === 'PAID' ? 'paid' : 'pending'}">${payment}</span></td>
+              <td><span class="badge ${registrationStatus === 'CONFIRMED' ? 'paid' : 'pending'}">${registrationStatus}</span></td>
+              <td>₹${Number(row.amount || 0).toLocaleString('en-IN')}</td>
+              <td>${(row.created_at || '').replace('T', ' ').replace('Z', '')}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (error) {
+        document.getElementById('stats').innerHTML = '<div class="stat"><div class="stat-label">Error</div><div class="stat-value">Unable to load dashboard</div></div>';
+      }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        await fetch(`${ADMIN_API}/api/admin/logout`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+      } catch (error) {
+        // Ignore logout errors; redirect anyway.
+      }
+      window.location.href = '/admin-login.html';
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>
