@@ -1,0 +1,2504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>SlokamTech | Java Full Stack Development</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #020817;
+            --bg-navy: #050e1f;
+            --blue-electric: #2f7df6;
+            --blue-glow: #1e4bb0;
+            --gold: #f5c542;
+            --gold-soft: #e6b800;
+            --text-light: #f0f6ff;
+            --text-muted: #b8c7e0;
+            --glass-bg: rgba(10, 20, 40, 0.6);
+            --border-glow: 1px solid rgba(47, 125, 246, 0.4);
+            --radius-card: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(2, 8, 23, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(47, 125, 246, 0.15);
+            transition: all 0.3s;
+            padding: 0.6rem 0;
+        }
+
+        .navbar.scrolled {
+            background: rgba(2, 8, 23, 0.92);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .nav-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(47, 125, 246, 0.3);
+            background: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #d0ddf0;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(245, 197, 66, 0.3);
+        }
+
+        .nav-course-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 999px;
+            border: 1px solid rgba(245, 197, 66, 0.5);
+            background: rgba(245, 197, 66, 0.08);
+            color: var(--gold);
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            box-shadow: 0 0 18px rgba(245, 197, 66, 0.12);
+        }
+
+        .nav-course-link:hover {
+            background: rgba(245, 197, 66, 0.12);
+            box-shadow: 0 0 26px rgba(245, 197, 66, 0.2);
+        }
+
+        .course-marquee {
+            position: relative;
+            overflow: hidden;
+            width: min(100%, 620px);
+            border: 1px solid rgba(47, 125, 246, 0.28);
+            background: rgba(6, 16, 31, 0.7);
+            border-radius: 999px;
+            margin-top: 1rem;
+            box-shadow: inset 0 0 20px rgba(47, 125, 246, 0.06);
+        }
+
+        .course-marquee-track {
+            display: flex;
+            align-items: center;
+            gap: 2.2rem;
+            white-space: nowrap;
+            padding: 0.7rem 1rem;
+            min-width: max-content;
+            animation: marqueeScroll 18s linear infinite;
+            color: #dfe8fb;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .course-marquee-track span {
+            color: #dfe8fb;
+        }
+
+        .course-marquee-track span::before {
+            content: '•';
+            margin-right: 0.9rem;
+            color: var(--gold);
+        }
+
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .btn-join {
+            background: linear-gradient(135deg, #f5c542, #d4a017);
+            border: none;
+            padding: 0.65rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            color: #020817;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(245, 197, 66, 0.4);
+            transition: 0.2s;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .btn-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 35px #f5c542;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 2rem;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: rgba(2, 8, 23, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-bottom: 1px solid var(--blue-glow);
+        }
+
+        .mobile-menu a {
+            color: white;
+            padding: 1rem 0;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+
+        /* Hero Section with Video Background */
+        .hero {
+            position: relative;
+            min-height: calc(100vh - 72px);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            padding: 4rem 0 3.5rem;
+            isolation: isolate;
+            background: #020817;
+        }
+
+        /* The hero never displays the SlokamTech logo as a foreground element. */
+        /* Keep the animation primarily on the RIGHT so the left content stays clean. */
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 36%;
+            width: 64%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% center;
+            z-index: 0;
+            display: block;
+            pointer-events: none;
+            background: #020817;
+        }
+
+        /* Dark left panel + soft blend into the video. */
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background:
+                linear-gradient(90deg,
+                    rgba(2, 8, 23, 1) 0%,
+                    rgba(2, 8, 23, 0.98) 27%,
+                    rgba(2, 8, 23, 0.88) 39%,
+                    rgba(2, 8, 23, 0.35) 51%,
+                    rgba(2, 8, 23, 0.08) 67%,
+                    rgba(2, 8, 23, 0.18) 100%);
+        }
+
+        .hero-grid {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 44%) minmax(0, 56%);
+            align-items: center;
+            gap: 0;
+            min-height: calc(100vh - 160px);
+        }
+
+        .hero-left {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            max-width: 640px;
+            padding-right: 1.5rem;
+        }
+
+        .badge {
+            background: rgba(15, 55, 120, 0.45);
+            border: 1px solid rgba(47, 125, 246, 0.55);
+            padding: 0.38rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            color: #c9ddff;
+            display: inline-block;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 22px rgba(47, 125, 246, 0.12);
+        }
+
+        .hero-heading {
+            font-size: clamp(2.8rem, 4.1vw, 4.15rem);
+            font-weight: 850;
+            line-height: 1.08;
+            letter-spacing: -1.5px;
+            margin-bottom: 0.85rem;
+            text-wrap: balance;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #f5c542, #ffdf80);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .learn-build {
+            font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .text-gold { color: var(--gold); }
+        .text-blue { color: var(--blue-electric); }
+
+        .hero-desc {
+            color: #c4d1e5;
+            max-width: 570px;
+            margin-bottom: 1.55rem;
+            font-size: 1rem;
+            line-height: 1.65;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f5c542, #d4a017);
+            border: none;
+            padding: 0.85rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 750;
+            color: #020817;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(245, 197, 66, 0.38);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(245, 197, 66, 0.65);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(2, 8, 23, 0.2);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 0.85rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            font-size: 0.95rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(245, 197, 66, 0.1);
+            box-shadow: 0 0 20px rgba(245, 197, 66, 0.22);
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0.55rem;
+            margin-top: 1.65rem;
+            max-width: 100%;
+        }
+
+        .tech-badge {
+            background: rgba(5, 16, 36, 0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(47, 125, 246, 0.3);
+            padding: 0.42rem 0.72rem;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.73rem;
+            color: #d9e5f7;
+            white-space: nowrap;
+        }
+
+        .tech-badge i { font-size: 0.82rem; }
+/* Keep the right-side animation visually crisp and secondary elements subtle. */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: auto 0 0 36%;
+            height: 22%;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(180deg, transparent, rgba(2, 8, 23, 0.55));
+        }
+
+        @media (min-width: 1200px) {
+            .hero-grid {
+                grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+            }
+            .hero-video {
+                left: 34%;
+                width: 66%;
+            }
+            .hero::after { left: 34%; }
+            .hero-overlay {
+                background:
+                    linear-gradient(90deg,
+                        rgba(2, 8, 23, 1) 0%,
+                        rgba(2, 8, 23, 0.99) 28%,
+                        rgba(2, 8, 23, 0.9) 39%,
+                        rgba(2, 8, 23, 0.42) 51%,
+                        rgba(2, 8, 23, 0.08) 68%,
+                        rgba(2, 8, 23, 0.16) 100%);
+            }
+        }
+
+        /* Curriculum sections */
+/* Curriculum sections */
+        .curriculum-section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .category-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .category-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(47, 125, 246, 0.3);
+            border-radius: 28px;
+            padding: 2rem 1.8rem;
+            flex: 1 1 280px;
+            transition: 0.3s;
+        }
+
+        .category-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 35px rgba(245, 197, 66, 0.2);
+            transform: translateY(-6px);
+        }
+
+        .workshop-card {
+            border-color: rgba(139, 92, 246, 0.5);
+            background: linear-gradient(180deg, rgba(12, 18, 31, 0.92), rgba(12, 18, 31, 0.74));
+        }
+
+        .course-highlight {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0.5rem 0 0.75rem;
+            color: #f3f7ff;
+            letter-spacing: -0.03em;
+        }
+
+        .workshop-desc {
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            font-size: 0.98rem;
+            line-height: 1.6;
+        }
+
+        .workshop-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.1rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .workshop-link:hover {
+            text-shadow: 0 0 15px rgba(245, 197, 66, 0.4);
+        }
+
+        .category-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(47, 125, 246, 0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .tech-item:hover {
+            border-color: var(--blue-electric);
+            box-shadow: 0 0 15px #2f7df6;
+            transform: scale(1.05);
+        }
+
+        /* Benefits strip */
+        .benefit-strip {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            background: rgba(10, 20, 40, 0.6);
+            border-radius: 60px;
+            padding: 1.8rem 2rem;
+            margin: 3rem auto;
+            max-width: 1100px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        /* Cards */
+        .double-card {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 4rem auto;
+            max-width: 1100px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(47, 125, 246, 0.35);
+            border-radius: 32px;
+            padding: 2.5rem;
+            flex: 1 1 400px;
+            text-align: center;
+        }
+
+        .points-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .point-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .point-num {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--blue-electric);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #b8d4ff;
+            box-shadow: 0 0 12px rgba(47, 125, 246, 0.5);
+        }
+
+        .check-list {
+            text-align: left;
+            margin-top: 1.5rem;
+        }
+
+        .check-list i {
+            color: var(--gold);
+            margin-right: 10px;
+        }
+
+        /* Loader */
+        .loader-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 4rem;
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .loader-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 6px solid #1e4bb0;
+            border-top: 6px solid #f5c542;
+            animation: spin 4s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px #2f7df6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loader-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            animation: spinReverse 4s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes spinReverse {
+            100% { transform: rotate(-360deg); }
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 18px;
+            background: #1a2a44;
+            border-radius: 20px;
+            margin: 1.5rem auto;
+            max-width: 500px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #f5c542, #2f7df6);
+            border-radius: 20px;
+            transition: width 0.1s linear;
+        }
+
+        .progress-percent {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        /* Footer */
+        footer {
+            background: #020817;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(47, 125, 246, 0.3);
+        }
+
+        /* Curriculum Page Specific Styles */
+        .curriculum-page {
+            min-height: 100vh;
+            padding: 2rem 0 4rem;
+        }
+
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .back-to-home:hover {
+            text-shadow: 0 0 15px rgba(245, 197, 66, 0.7);
+        }
+
+        .curriculum-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .curriculum-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .curriculum-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .curriculum-meta {
+            font-size: 1.1rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .horizontal-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem 1.5rem;
+            margin: 2rem 0 0.25rem;
+            padding: 0.5rem 0.5rem 0;
+            border-bottom: 2px solid rgba(47, 125, 246, 0.25);
+            position: relative;
+        }
+
+        .step-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            min-width: 70px;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+
+        .step-tab .step-num {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: 0.2s;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+        }
+
+        .step-tab .step-label {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .step-tab:hover {
+            color: var(--gold);
+            background: rgba(245, 197, 66, 0.06);
+        }
+
+        .step-tab:hover .step-num {
+            color: var(--gold);
+            opacity: 1;
+        }
+        .step-tab:hover .step-label {
+            color: var(--gold);
+        }
+
+        .step-tab.active {
+            color: var(--gold);
+            border-bottom: 3px solid var(--gold);
+            background: rgba(245, 197, 66, 0.08);
+        }
+
+        .step-tab.active .step-num {
+            color: var(--gold);
+            opacity: 1;
+        }
+        .step-tab.active .step-label {
+            color: var(--gold);
+        }
+
+        .curriculum-layout {
+            margin-top: 1.5rem;
+        }
+
+        .course-content {
+            background: rgba(10, 20, 40, 0.6);
+            border: 1px solid rgba(47, 125, 246, 0.3);
+            border-radius: 24px;
+            padding: 2.5rem;
+            min-height: 400px;
+        }
+
+        .course-content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+
+        .course-content p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .course-modules {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .module-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(47, 125, 246, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: 0.3s;
+        }
+
+        .module-item:hover {
+            border-color: var(--blue-electric);
+            box-shadow: 0 0 15px rgba(47, 125, 246, 0.2);
+        }
+
+        .module-item h4 {
+            color: var(--text-light);
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+        }
+
+        .module-item p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        .program-format,
+        .curriculum-extra {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--glass-bg);
+            border: var(--border-glow);
+            border-radius: var(--radius-card);
+        }
+
+        .program-format-grid,
+        .package-grid,
+        .approach-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+
+        .format-item,
+        .info-card {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(47, 125, 246, 0.25);
+            border-radius: 14px;
+        }
+
+        .format-item strong,
+        .info-card h3 {
+            color: var(--gold);
+        }
+
+        .course-facts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1rem 0 1.5rem;
+        }
+
+        .course-fact {
+            padding: 0.55rem 0.9rem;
+            border: 1px solid rgba(245, 197, 66, 0.45);
+            border-radius: 999px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .mastery-groups {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .mastery-group {
+            overflow: hidden;
+            background: rgba(5, 14, 31, 0.72);
+            border: 1px solid rgba(47, 125, 246, 0.3);
+            border-radius: 16px;
+        }
+
+        .mastery-group h4 {
+            padding: 0.9rem 1rem;
+            color: var(--gold);
+            background: rgba(47, 125, 246, 0.12);
+            border-bottom: 1px solid rgba(47, 125, 246, 0.25);
+            font-size: 1rem;
+        }
+
+        .mastery-group ul {
+            list-style: none;
+            padding: 0.4rem 1rem 0.7rem;
+        }
+
+        .mastery-topic {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            padding: 0.62rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .mastery-topic:last-child { border-bottom: 0; }
+
+        .mastery-topic i {
+            color: var(--gold);
+            margin-top: 0.2rem;
+            font-size: 0.75rem;
+        }
+
+        .interview-focus {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            border-left: 4px solid var(--gold);
+            background: rgba(245, 197, 66, 0.07);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .curriculum-extra h2,
+        .program-format h2 {
+            color: var(--gold);
+            margin-bottom: 0.75rem;
+        }
+
+        .curriculum-extra ul {
+            padding-left: 1.25rem;
+            color: var(--text-muted);
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .curriculum-extra li { margin-bottom: 0.55rem; }
+
+        .price-highlight {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--gold);
+            font-weight: 800;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 999px;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            background: rgba(47, 125, 246, 0.2);
+            border: 1px solid rgba(47, 125, 246, 0.5);
+        }
+
+        .contact-link.whatsapp { background: rgba(37, 211, 102, 0.18); border-color: #25d366; }
+        .contact-link.instagram { background: linear-gradient(90deg, rgba(131,58,180,.3), rgba(253,29,29,.3), rgba(252,176,69,.3)); }
+
+        .contact-section {
+            padding: 4rem 0;
+            text-align: center;
+            scroll-margin-top: 80px;
+        }
+        .contact-section .contact-links {
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .mobile-menu.show {
+                display: flex;
+            }
+            .hero {
+                min-height: 760px;
+                padding: 3.5rem 0 3rem;
+            }
+            .hero-video {
+                left: 28%;
+                width: 72%;
+                object-position: 50% center;
+            }
+            .hero-overlay {
+                background:
+                    linear-gradient(90deg,
+                        rgba(2, 8, 23, 1) 0%,
+                        rgba(2, 8, 23, 0.98) 28%,
+                        rgba(2, 8, 23, 0.84) 43%,
+                        rgba(2, 8, 23, 0.35) 58%,
+                        rgba(2, 8, 23, 0.18) 100%);
+            }
+            .hero-grid {
+                grid-template-columns: minmax(0, 54%) minmax(0, 46%);
+                min-height: 680px;
+            }
+            .hero-heading {
+                font-size: clamp(2.35rem, 5vw, 3.2rem);
+            }
+            .tech-badges {
+                flex-wrap: wrap;
+            }
+            .points-grid {
+                grid-template-columns: 1fr;
+            }
+            .curriculum-layout {
+                flex-direction: column;
+            }
+            .course-content {
+                padding: 1.5rem;
+            }
+            .course-modules {
+                grid-template-columns: 1fr;
+            }
+            .curriculum-extra ul { columns: 1; }
+            .program-format, .curriculum-extra { padding: 1.25rem; }
+            .mastery-groups { grid-template-columns: 1fr; }
+
+            .horizontal-steps {
+                gap: 0.5rem 0.8rem;
+                justify-content: flex-start;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+            .step-tab {
+                min-width: 90px;
+                padding: 0.6rem 1rem;
+                font-size: 1.6rem;
+                flex: 0 0 auto;
+            }
+            .step-tab .step-label {
+                font-size: 1.6rem;
+            }
+            .step-tab .step-num {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .step-tab {
+                min-width: 80px;
+                padding: 0.4rem 0.8rem;
+                font-size: 1.4rem;
+            }
+            .step-tab .step-label {
+                font-size: 1.4rem;
+            }
+            .step-tab .step-num {
+                font-size: 0.8rem;
+            }
+            .hero {
+                min-height: 720px;
+            }
+            .hero-video {
+                left: 0;
+                width: 100%;
+                opacity: 0.38;
+                object-position: 58% center;
+            }
+            .hero-overlay {
+                background: linear-gradient(90deg, rgba(2,8,23,0.97), rgba(2,8,23,0.82));
+            }
+            .hero-grid {
+                grid-template-columns: 1fr;
+                min-height: 650px;
+            }
+            .hero-left {
+                max-width: 100%;
+                padding-right: 0;
+            }
+            .hero-heading {
+                font-size: 2rem;
+            }
+            .hero-btns {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .hero-btns .btn-primary,
+            .hero-btns .btn-secondary {
+                text-align: center;
+            }
+        }
+    
+
+        /* =========================================================
+           RESPONSIVE POLISH — DESKTOP / TABLET / MOBILE
+           Keeps the existing design and functionality intact.
+           ========================================================= */
+
+        html {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        img, video, iframe, svg {
+            max-width: 100%;
+        }
+
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Large tablets / small laptops */
+        @media (max-width: 1100px) {
+            .container {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+
+            .nav-wrap {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+
+            .logo-brand {
+                font-size: 1.35rem;
+            }
+
+            .nav-links {
+                gap: 1.35rem;
+            }
+
+            .hero {
+                min-height: calc(100svh - 68px);
+                padding: 3rem 0;
+            }
+
+            .hero-grid {
+                grid-template-columns: minmax(0, 48%) minmax(0, 52%);
+                min-height: calc(100svh - 140px);
+            }
+
+            .hero-video {
+                left: 34%;
+                width: 66%;
+                object-position: 58% center;
+            }
+
+            .hero-left {
+                max-width: 100%;
+                padding-right: 1rem;
+            }
+
+            .hero-heading {
+                font-size: clamp(2.45rem, 4.4vw, 3.55rem);
+            }
+
+            .hero-desc {
+                max-width: 520px;
+            }
+
+            .tech-badges {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Tablets */
+        @media (max-width: 900px) {
+            .container {
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
+
+            .nav-wrap {
+                min-height: 58px;
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
+
+            .navbar {
+                padding: 0.45rem 0;
+            }
+
+            .logo-img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo-brand {
+                font-size: 1.25rem;
+                gap: 0.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-wrap > .btn-join {
+                margin-left: auto;
+                margin-right: 0.75rem;
+                padding: 0.58rem 1.25rem;
+                font-size: 0.78rem;
+            }
+
+            .hamburger {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 42px;
+                height: 42px;
+                font-size: 1.45rem;
+            }
+
+            .mobile-menu {
+                display: none;
+                padding: 0.75rem 1.25rem 1rem;
+            }
+
+            .mobile-menu.show {
+                display: flex;
+            }
+
+            .mobile-menu a {
+                padding: 0.85rem 0;
+            }
+
+            .mobile-menu .mobile-join {
+                display: flex;
+                justify-content: center;
+                margin-top: 0.65rem;
+                padding: 0.8rem 1rem;
+                border: 0;
+                border-radius: 999px;
+                background: linear-gradient(135deg, #f5c542, #d4a017);
+                color: #020817;
+                font-weight: 800;
+            }
+
+            .hero {
+                min-height: 760px;
+                padding: 2.75rem 0 3rem;
+            }
+
+            .hero-grid {
+                grid-template-columns: minmax(0, 56%) minmax(0, 44%);
+                min-height: 690px;
+            }
+
+            .hero-video {
+                left: 28%;
+                width: 72%;
+                object-position: 58% center;
+            }
+
+            .hero-overlay {
+                background:
+                    linear-gradient(
+                        90deg,
+                        rgba(2,8,23,1) 0%,
+                        rgba(2,8,23,0.99) 27%,
+                        rgba(2,8,23,0.88) 43%,
+                        rgba(2,8,23,0.48) 58%,
+                        rgba(2,8,23,0.18) 100%
+                    );
+            }
+
+            .hero-heading {
+                font-size: clamp(2.2rem, 5.2vw, 3.2rem);
+                line-height: 1.06;
+                letter-spacing: -1px;
+            }
+
+            .learn-build {
+                font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+            }
+
+            .hero-desc {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                margin-bottom: 1.35rem;
+            }
+
+            .hero-btns {
+                gap: 0.7rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.78rem 1.45rem;
+                font-size: 0.88rem;
+            }
+
+            .tech-badges {
+                gap: 0.45rem;
+                margin-top: 1.35rem;
+            }
+
+            .tech-badge {
+                padding: 0.38rem 0.62rem;
+                font-size: 0.69rem;
+            }
+
+            .curriculum-section {
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+            }
+
+            .section-title {
+                font-size: clamp(2rem, 5vw, 2.5rem);
+            }
+
+            .category-grid {
+                gap: 1.25rem;
+            }
+
+            .category-card {
+                flex-basis: 260px;
+                padding: 1.5rem;
+            }
+
+            .category-title {
+                font-size: 1.5rem;
+            }
+
+            .points-grid,
+            .course-modules,
+            .mastery-groups {
+                grid-template-columns: 1fr;
+            }
+
+            .curriculum-layout {
+                flex-direction: column;
+            }
+
+            .horizontal-steps {
+                gap: 0.5rem;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                padding-bottom: 0.55rem;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .step-tab {
+                flex: 0 0 auto;
+            }
+        }
+
+        /* Phones */
+        @media (max-width: 600px) {
+            body {
+                font-size: 15px;
+            }
+
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .navbar {
+                padding: 0.35rem 0;
+            }
+
+            .nav-wrap {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                min-height: 54px;
+            }
+
+            .logo-img {
+                width: 36px;
+                height: 36px;
+            }
+
+            .logo-brand {
+                font-size: 1.08rem;
+                gap: 0.42rem;
+            }
+
+            /* On phones the CTA lives inside the hamburger menu to prevent
+               the header from becoming cramped. */
+            .nav-wrap > .btn-join {
+                display: none;
+            }
+
+            .hamburger {
+                width: 40px;
+                height: 40px;
+                font-size: 1.35rem;
+            }
+
+            .mobile-menu {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 2.5rem 0 2.25rem;
+                align-items: flex-start;
+            }
+
+            .hero-video {
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0.46;
+                object-position: 62% center;
+            }
+
+            .hero-overlay {
+                background:
+                    linear-gradient(
+                        180deg,
+                        rgba(2,8,23,0.91) 0%,
+                        rgba(2,8,23,0.86) 42%,
+                        rgba(2,8,23,0.79) 72%,
+                        rgba(2,8,23,0.9) 100%
+                    );
+            }
+
+            .hero::after {
+                left: 0;
+                height: 18%;
+                background: linear-gradient(
+                    180deg,
+                    transparent,
+                    rgba(2,8,23,0.78)
+                );
+            }
+
+            .hero-grid {
+                display: block;
+                min-height: 0;
+                width: 100%;
+            }
+
+            .hero-left {
+                width: 100%;
+                max-width: none;
+                padding-right: 0;
+            }
+
+            .badge {
+                max-width: 100%;
+                margin-bottom: 0.9rem;
+                padding: 0.34rem 0.85rem;
+                font-size: 0.63rem;
+                letter-spacing: 0.75px;
+            }
+
+            .hero-heading {
+                max-width: 100%;
+                font-size: clamp(2rem, 9.5vw, 2.75rem);
+                line-height: 1.04;
+                letter-spacing: -0.8px;
+                margin-bottom: 0.8rem;
+                text-wrap: pretty;
+            }
+
+            .learn-build {
+                font-size: clamp(1.05rem, 5vw, 1.3rem);
+                line-height: 1.35;
+                margin-bottom: 0.9rem;
+            }
+
+            .hero-desc {
+                max-width: 100%;
+                font-size: 0.9rem;
+                line-height: 1.58;
+                margin-bottom: 1.2rem;
+            }
+
+            .hero-btns {
+                display: grid;
+                grid-template-columns: 1fr;
+                width: 100%;
+                gap: 0.7rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                min-height: 48px;
+                padding: 0.75rem 1rem;
+                font-size: 0.86rem;
+            }
+
+            .tech-badges {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.5rem;
+                width: 100%;
+                margin-top: 1.15rem;
+            }
+
+            .tech-badge {
+                justify-content: center;
+                min-height: 38px;
+                padding: 0.4rem 0.5rem;
+                font-size: 0.68rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .tech-badge i {
+                font-size: 0.76rem;
+                flex: 0 0 auto;
+            }
+
+            .curriculum-section {
+                padding: 3.25rem 0;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                line-height: 1.15;
+                margin-bottom: 1.5rem;
+            }
+
+            .category-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-top: 1.25rem;
+            }
+
+            .category-card {
+                width: 100%;
+                min-width: 0;
+                padding: 1.25rem;
+                border-radius: 20px;
+            }
+
+            .category-title {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+
+            .tech-list {
+                gap: 0.5rem;
+            }
+
+            .tech-item {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.78rem;
+            }
+
+            .program-format,
+            .curriculum-extra,
+            .course-content {
+                padding: 1.1rem;
+            }
+
+            .benefit-strip {
+                gap: 0.65rem;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .benefit-item {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .double-card {
+                grid-template-columns: 1fr !important;
+            }
+
+            footer .container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem !important;
+            }
+
+            footer {
+                padding: 2.5rem 0 1.5rem !important;
+            }
+        }
+
+        /* Very small phones */
+        @media (max-width: 380px) {
+            .container {
+                padding-left: 0.85rem;
+                padding-right: 0.85rem;
+            }
+
+            .nav-wrap {
+                padding-left: 0.85rem;
+                padding-right: 0.85rem;
+            }
+
+            .logo-brand {
+                font-size: 1rem;
+            }
+
+            .logo-img {
+                width: 34px;
+                height: 34px;
+            }
+
+            .hero {
+                padding-top: 2rem;
+            }
+
+            .hero-heading {
+                font-size: 1.9rem;
+            }
+
+            .tech-badges {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .tech-badge {
+                font-size: 0.64rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Accessibility / touch improvements */
+        @media (hover: none) {
+            .btn-primary:hover,
+            .btn-secondary:hover,
+            .btn-join:hover,
+            .category-card:hover {
+                transform: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+
+        /* Final mobile composition: content-first, cinematic video backdrop. */
+        @media (max-width: 600px) {
+            .hero {
+                min-height: calc(100svh - 54px);
+                padding: 2rem 0 2.4rem;
+            }
+            .hero-video {
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0.38;
+                object-position: 63% center;
+            }
+            .hero-overlay {
+                background: linear-gradient(
+                    180deg,
+                    rgba(2,8,23,0.94) 0%,
+                    rgba(2,8,23,0.88) 36%,
+                    rgba(2,8,23,0.78) 68%,
+                    rgba(2,8,23,0.93) 100%
+                );
+            }
+            .hero-grid { min-height: 0; }
+            .hero-heading { font-size: clamp(2rem, 10vw, 2.7rem); }
+            .hero-desc { max-width: 100%; }
+            .hero-btns { margin-top: .15rem; }
+            .tech-badges { margin-top: 1.1rem; }
+        }
+
+</style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // ============ ROUTING SYSTEM ============
+        /*
+         * GitHub Pages project-site configuration
+         *
+         * Current test deployment:
+         *   https://girivardhan-reddy.github.io/slokamtech/
+         *
+         * Curriculum:
+         *   https://girivardhan-reddy.github.io/slokamtech/ciriculam
+         *
+         * Later, when the custom domain is connected:
+         *   https://slokamtech.com/
+         *   https://slokamtech.com/ciriculam
+         *
+         * The base path is detected automatically so the same index.html
+         * works in both environments.
+         */
+        const BASE_PATH = (() => {
+            const host = window.location.hostname.toLowerCase();
+
+            // GitHub Pages project site:
+            // https://girivardhan-reddy.github.io/slokamtech/
+            if (host.endsWith('github.io')) {
+                return '/slokamtech/';
+            }
+
+            // Custom domain:
+            // https://slokamtech.com/
+            return '/';
+        })();
+
+        function normalizeRoute(path) {
+            if (!path) return '/';
+
+            let value = String(path);
+
+            // Remove query/hash when a full URL-like value is supplied.
+            value = value.split('?')[0].split('#')[0];
+
+            // Decode safely.
+            try {
+                value = decodeURIComponent(value);
+            } catch (_) {}
+
+            // Convert the GitHub project URL into an app route.
+            if (BASE_PATH !== '/' && value.startsWith(BASE_PATH)) {
+                value = value.substring(BASE_PATH.length - 1);
+            }
+
+            if (!value.startsWith('/')) {
+                value = '/' + value;
+            }
+
+            value = value.replace(/\/{2,}/g, '/');
+
+            if (value.length > 1) {
+                value = value.replace(/\/+$/, '');
+            }
+
+            // Requested public route.
+            if (value === '/curriculum') {
+                value = '/ciriculam';
+            }
+
+            return value || '/';
+        }
+
+        function assetUrl(file) {
+            const cleanFile = String(file).replace(/^\/+/, '');
+            return BASE_PATH + cleanFile;
+        }
+
+        function routeUrl(path) {
+            const route = normalizeRoute(path);
+
+            if (route === '/') {
+                return BASE_PATH;
+            }
+
+            return BASE_PATH + route.replace(/^\/+/, '');
+        }
+
+        class Router {
+            constructor() {
+                this.routes = {};
+                this.init();
+            }
+
+            addRoute(path, handler) {
+                this.routes[normalizeRoute(path)] = handler;
+            }
+
+            navigate(path) {
+                const route = normalizeRoute(path);
+
+                if (window.location.protocol === 'file:') {
+                    const targetUrl = route === '/'
+                        ? window.location.pathname
+                        : `${window.location.pathname}?route=${encodeURIComponent(route)}`;
+
+                    window.history.pushState({}, '', targetUrl);
+                } else {
+                    window.history.pushState({}, '', routeUrl(route));
+                }
+
+                this.handleRoute();
+            }
+
+            handleRoute() {
+                let requestedPath = '/';
+
+                if (window.location.protocol === 'file:') {
+                    requestedPath =
+                        new URLSearchParams(window.location.search).get('route') || '/';
+                } else {
+                    // 404.html can send the original route through ?route=...
+                    const fallbackRoute =
+                        new URLSearchParams(window.location.search).get('route');
+
+                    requestedPath = fallbackRoute || window.location.pathname;
+
+                    // Remove the fallback query once the route is restored.
+                    if (fallbackRoute) {
+                        const cleanUrl = routeUrl(fallbackRoute);
+                        window.history.replaceState({}, '', cleanUrl);
+                        requestedPath = fallbackRoute;
+                    }
+                }
+
+                const path = normalizeRoute(requestedPath);
+                const handler =
+                    this.routes[path] ||
+                    this.routes['/'];
+
+                if (landingProgressAnimationFrame) {
+                    cancelAnimationFrame(landingProgressAnimationFrame);
+                    landingProgressAnimationFrame = null;
+                }
+
+                const mobileMenu =
+                    document.getElementById('mobileMenu');
+
+                if (mobileMenu) {
+                    mobileMenu.classList.remove('show');
+                }
+
+                handler();
+                window.scrollTo(0, 0);
+            }
+
+            init() {
+                window.addEventListener('popstate', () => {
+                    this.handleRoute();
+                });
+            }
+        }
+
+        let landingProgressAnimationFrame = null;
+        const router = new Router();
+
+        function routeHref(path) {
+            if (window.location.protocol === 'file:') {
+                return path === '/'
+                    ? window.location.pathname
+                    : `?route=${encodeURIComponent(normalizeRoute(path))}`;
+            }
+
+            return routeUrl(path);
+        }
+
+        // ============ NAVBAR COMPONENT ============
+        function renderNavbar(activePage = '') {
+            const navbarHTML = `
+                <nav class="navbar" id="navbar">
+                    <div class="nav-wrap">
+                        <a href="${routeHref('/')}" class="logo-brand" onclick="handleNavigation(event, '/')">
+                            <img src="${assetUrl('logo.jpeg')}" alt="SlokamTech Logo" class="logo-img">
+                            SlokamTech
+                        </a>
+                        <ul class="nav-links">
+                            <li><a href="${routeHref('/')}" class="${activePage === 'home' ? 'active' : ''}" onclick="handleNavigation(event, '/')">Home</a></li>
+                            <li><a href="${routeHref('/ciriculam')}" class="${activePage === 'curriculum' ? 'active' : ''}" onclick="handleNavigation(event, '/ciriculam')">Curriculum</a></li>
+                            <li><a href="claude.html" class="nav-course-link">Java Full-Stack with Claude</a></li>
+                        </ul>
+                        <button class="btn-join" onclick="scrollToContact()">JOIN NOW</button>
+                        <button class="hamburger" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+                    </div>
+                    <div class="mobile-menu" id="mobileMenu">
+                        <a href="${routeHref('/')}" onclick="handleNavigation(event, '/')">Home</a>
+                        <a href="${routeHref('/ciriculam')}" onclick="handleNavigation(event, '/ciriculam')">Curriculum</a>
+                        <a href="claude.html">Java Full-Stack with Claude</a>
+                        <a href="#contactSection" class="mobile-join" onclick="scrollToContact(); toggleMobileMenu(); return false;">JOIN NOW</a>
+                    </div>
+                </nav>
+            `;
+            return navbarHTML;
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) mobileMenu.classList.toggle('show');
+        }
+
+        function handleNavigation(event, path) {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                return;
+            }
+            event.preventDefault();
+            router.navigate(path);
+        }
+
+        function scrollToContact() {
+            const contactEl = document.getElementById('contactSection');
+            if (contactEl) {
+                contactEl.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                router.navigate('/');
+                setTimeout(() => {
+                    const el = document.getElementById('contactSection');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+            }
+        }
+
+        // ============ FOOTER COMPONENT ============
+        function renderFooter() {
+            return `
+                <footer>
+                    <div class="container" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:2rem;">
+                        <div>
+                            <img src="${assetUrl('logo.jpeg')}" alt="SlokamTech" style="width:50px; border-radius:50%; margin-bottom:1rem;">
+                            <h3>SlokamTech</h3>
+                            <p style="color:var(--text-muted);">Transforming careers through Java Full Stack education.</p>
+                        </div>
+                        <div>
+                            <a href="#" style="color:#bbb;" onclick="router.navigate('/')">Home</a><br>
+                            <a href="#" style="color:#bbb;" onclick="router.navigate('/ciriculam')">Curriculum</a><br>
+                        </div>
+                        <div>
+                            <a href="https://www.instagram.com/slokamtech?igsi=MTZ3aG5idHN1cXFkbA==" target="_blank" rel="noopener noreferrer" aria-label="SlokamTech on Instagram" style="color:white; text-decoration:none;"><i class="fab fa-instagram fa-2x" style="margin-right:15px;"></i></a>
+                            <i class="fab fa-youtube fa-2x" style="margin-right:15px;"></i>
+                            <i class="fab fa-linkedin fa-2x" style="margin-right:15px;"></i>
+                            <a href="https://wa.me/918881178888" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp 8881178888" style="color:#25d366; text-decoration:none;"><i class="fab fa-whatsapp fa-2x"></i> <span style="vertical-align:super; font-weight:700;">8881178888</span></a>
+                        </div>
+                    </div>
+                    <p style="text-align:center; margin-top:2rem;">© 2026 SlokamTech. All rights reserved.</p>
+                </footer>
+            `;
+        }
+
+        // ============ LANDING PAGE ============
+        function renderLandingPage() {
+            const app = document.getElementById('app');
+            const landingHTML = `
+                ${renderNavbar('home')}
+                
+                <section class="hero" id="heroSection">
+                    <video class="hero-video" autoplay loop muted playsinline preload="auto" aria-hidden="true">
+                        <source src="${assetUrl('java-fullstack-hero.mp4')}" type="video/mp4">
+                    </video>
+                    <div class="hero-overlay"></div>
+                    
+                    <div class="container hero-grid">
+                        <div class="hero-left">
+                            <div class="badge">JAVA FULL STACK COACHING</div>
+                            <h1 class="hero-heading">Master <span class="gold-gradient">Java Full Stack</span><br>Development.</h1>
+                            <div class="learn-build"><span class="text-gold">Learn.</span> <span class="text-blue">Build.</span> <span class="text-blue">Get Job Ready.</span></div>
+                            <p class="hero-desc">Build strong programming fundamentals, develop real-world applications and gain practical experience with Java Full Stack technologies through structured, project-based training.</p>
+                            <div class="course-marquee" aria-label="Course highlights">
+                                <div class="course-marquee-track">
+                                    <span>Java Full-Stack with Claude</span>
+                                    <span>1-Day Intensive Workshop</span>
+                                    <span>Online & Offline</span>
+                                    <span>Cashfree Payment</span>
+                                    <span>Real Project Workflow</span>
+                                    <span>Java Full-Stack with Claude</span>
+                                    <span>1-Day Intensive Workshop</span>
+                                    <span>Online & Offline</span>
+                                    <span>Cashfree Payment</span>
+                                    <span>Real Project Workflow</span>
+                                </div>
+                            </div>
+                            <div class="hero-btns">
+                                <button class="btn-primary" onclick="scrollToContact()">JOIN THE COURSE</button>
+                                <a href="curriculum.html" class="btn-secondary">EXPLORE COURSE</a>
+                            </div>
+                            <div class="tech-badges">
+                                <span class="tech-badge"><i class="fab fa-java"></i> Java</span>
+                                <span class="tech-badge"><i class="fas fa-leaf"></i> Spring Boot</span>
+                                <span class="tech-badge"><i class="fab fa-react"></i> React</span>
+                                <span class="tech-badge"><i class="fas fa-code"></i> TypeScript</span>
+                                <span class="tech-badge"><i class="fas fa-database"></i> SQL</span>
+                                <span class="tech-badge"><i class="fas fa-plug"></i> REST API</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="courses" class="curriculum-section container">
+                    <h2 class="section-title">JAVA FULL STACK <span class="gold-gradient">DEVELOPMENT</span></h2>
+                    <div class="category-grid">
+                        <div class="category-card">
+                            <div class="category-title"><i class="fas fa-server" style="color:#2f7df6;"></i> BACKEND</div>
+                            <div class="tech-list">
+                                <span class="tech-item"><i class="fab fa-java"></i> Core Java</span>
+                                <span class="tech-item"><i class="fas fa-cogs"></i> Advanced Java</span>
+                                <span class="tech-item"><i class="fas fa-database"></i> JDBC</span>
+                                <span class="tech-item"><i class="fas fa-leaf"></i> Spring Boot</span>
+                                <span class="tech-item"><i class="fas fa-plug"></i> REST APIs</span>
+                                <span class="tech-item"><i class="fas fa-layer-group"></i> Hibernate (JPA)</span>
+                                <span class="tech-item"><i class="fas fa-table"></i> MySQL</span>
+                            </div>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-title"><i class="fas fa-laptop-code" style="color:#f5c542;"></i> FRONTEND</div>
+                            <div class="tech-list">
+                                <span class="tech-item"><i class="fab fa-html5"></i> HTML</span>
+                                <span class="tech-item"><i class="fab fa-css3-alt"></i> CSS</span>
+                                <span class="tech-item"><i class="fab fa-js"></i> JavaScript</span>
+                                <span class="tech-item"><i class="fas fa-code"></i> TypeScript</span>
+                                <span class="tech-item"><i class="fab fa-react"></i> React</span>
+                                <span class="tech-item"><i class="fas fa-mobile-alt"></i> Responsive Design</span>
+                                <span class="tech-item"><i class="fas fa-network-wired"></i> API Integration</span>
+                            </div>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-title"><i class="fas fa-tools" style="color:#e6b800;"></i> DATABASE & TOOLS</div>
+                            <div class="tech-list">
+                                <span class="tech-item"><i class="fas fa-database"></i> SQL</span>
+                                <span class="tech-item"><i class="fab fa-git-alt"></i> Git</span>
+                                <span class="tech-item"><i class="fab fa-github"></i> GitHub</span>
+                                <span class="tech-item"><i class="fas fa-paper-plane"></i> Postman</span>
+                                <span class="tech-item"><i class="fas fa-code"></i> VS Code</span>
+                                <span class="tech-item"><i class="fas fa-cogs"></i> Maven</span>
+                                <span class="tech-item"><i class="fas fa-wrench"></i> Dev Tools</span>
+                            </div>
+                        </div>
+
+                        <div class="category-card workshop-card">
+                            <div class="category-title"><i class="fas fa-robot" style="color:#8b5cf6;"></i> NEW WORKSHOP</div>
+                            <div class="course-highlight">Java Full-Stack with Claude</div>
+                            <p class="workshop-desc">1-Day Intensive Real-Project Implementation Workshop</p>
+                            <p class="workshop-desc" style="margin-top:-0.4rem; margin-bottom:1rem;">Learn how to use Claude Code throughout the Java Full-Stack development lifecycle — from understanding an existing codebase to implementation, debugging, testing, review and delivery.</p>
+                            <div class="tech-list">
+                                <span class="tech-item"><i class="fab fa-java"></i> Java</span>
+                                <span class="tech-item"><i class="fas fa-leaf"></i> Spring Boot</span>
+                                <span class="tech-item"><i class="fab fa-react"></i> React</span>
+                                <span class="tech-item"><i class="fas fa-network-wired"></i> Microservices</span>
+                                <span class="tech-item"><i class="fas fa-plug"></i> REST API</span>
+                                <span class="tech-item"><i class="fab fa-git-alt"></i> Git</span>
+                                <span class="tech-item"><i class="fas fa-robot"></i> Claude Code</span>
+                            </div>
+                            <a href="curriculum.html" class="workshop-link">Explore Workshop <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="container benefit-strip">
+                    <span class="benefit-item"><i class="fas fa-chart-line" style="color:#f5c542;"></i> Industry Oriented Curriculum</span>
+                    <span class="benefit-item"><i class="fas fa-project-diagram" style="color:#2f7df6;"></i> Real-Time Projects</span>
+                    <span class="benefit-item"><i class="fas fa-user-tie" style="color:#f5c542;"></i> Expert Mentors</span>
+                    <span class="benefit-item"><i class="fas fa-laptop-code" style="color:#2f7df6;"></i> Practical Training</span>
+                    <span class="benefit-item"><i class="fas fa-comments" style="color:#f5c542;"></i> Interview Preparation</span>
+                    <span class="benefit-item"><i class="fas fa-briefcase" style="color:#2f7df6;"></i> Placement Guidance</span>
+                </div>
+
+                <div class="container double-card">
+                    <div class="glass-card">
+                        <h3><i class="fas fa-bullseye" style="color:gold;"></i> 10 POINTS. ONE TARGET. YOUR FUTURE.</h3>
+                        <div class="points-grid">
+                            <div class="point-item"><span class="point-num">01</span> Strong Foundations</div>
+                            <div class="point-item"><span class="point-num">02</span> Concept Clarity</div>
+                            <div class="point-item"><span class="point-num">03</span> Hands-on Coding</div>
+                            <div class="point-item"><span class="point-num">04</span> Real-Time Projects</div>
+                            <div class="point-item"><span class="point-num">05</span> Full Stack Skills</div>
+                            <div class="point-item"><span class="point-num">06</span> Interview Preparation</div>
+                            <div class="point-item"><span class="point-num">07</span> Soft Skills</div>
+                            <div class="point-item"><span class="point-num">08</span> Portfolio Building</div>
+                            <div class="point-item"><span class="point-num">09</span> Placement Support</div>
+                            <div class="point-item"><span class="point-num">10</span> Career Success</div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3>WHY SLOKAMTECH?</h3>
+                        <p style="margin:1rem 0; color:var(--text-muted);">We don't just teach, we transform beginners into confident developers.</p>
+                        <div class="check-list">
+                            <p><i class="fas fa-check-circle"></i> Learn from industry professionals</p>
+                            <p><i class="fas fa-check-circle"></i> Work on real-world projects</p>
+                            <p><i class="fas fa-check-circle"></i> Get placed in top IT companies</p>
+                            <p><i class="fas fa-check-circle"></i> Continuous support & guidance</p>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="container loader-section">
+                    <div class="loader-circle"><img src="${assetUrl('logo.jpeg')}" alt="logo"></div>
+                    <div style="flex:1; max-width:500px;">
+                        <h2 style="font-size:2.5rem;">Loading Your <span class="gold-gradient">Future...</span></h2>
+                        <p style="color:var(--text-muted); margin-bottom:1rem;">Please wait while we prepare an amazing learning experience for you.</p>
+                        <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+                        <span class="progress-percent" id="progressPercent">0%</span>
+                    </div>
+                </section>
+
+                <section class="container" style="padding:4rem 0;">
+                    <h2 class="section-title">About SlokamTech</h2>
+                    <p style="max-width:700px; margin:auto; text-align:center;">SlokamTech is a premium technology institute focused on practical, career-oriented training. Our approach combines strong fundamentals with real-world development to create job-ready professionals.</p>
+                </section>
+
+                <section class="container" style="padding:2rem 0;">
+                    <h2 class="section-title">Learning Journey</h2>
+                    <div style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center;">
+                        <span class="tech-badge">01 Learn Fundamentals</span>
+                        <span class="tech-badge">02 Master Technologies</span>
+                        <span class="tech-badge">03 Build Projects</span>
+                        <span class="tech-badge">04 Develop Portfolio</span>
+                        <span class="tech-badge">05 Prepare Interviews</span>
+                        <span class="tech-badge">06 Become Job Ready</span>
+                    </div>
+                </section>
+
+
+
+                <section style="text-align:center; padding:4rem 0;">
+                    <h2 class="section-title">Your Coding Journey Starts Here.</h2>
+                    <p style="color:var(--text-muted); margin:1rem;">Learn the right skills. Build real projects. Become industry ready.</p>
+                    <button class="btn-primary" style="font-size:1.1rem;" onclick="scrollToContact()">START YOUR JOURNEY</button>
+                </section>
+
+                <section class="container contact-section" id="contactSection">
+                    <h2 class="section-title">📞 <span class="gold-gradient">Get in Touch</span></h2>
+                    <p style="color:var(--text-muted); max-width:600px; margin:0 auto 1.5rem;">Ready to start your journey? Reach out to us on WhatsApp or Instagram.</p>
+                    <div class="contact-links">
+                        <a class="contact-link whatsapp" href="https://wa.me/918881178888" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> 8881178888</a>
+                        <a class="contact-link instagram" href="https://www.instagram.com/slokamtech?igsi=MTZ3aG5idHN1cXFkbA==" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> @slokamtech</a>
+                    </div>
+                    <p style="margin-top:1.5rem; color:var(--text-muted);">📧 Email: info@slokamtech.com</p>
+                </section>
+
+                ${renderFooter()}
+            `;
+            
+            app.innerHTML = landingHTML;
+            initLandingPageScripts();
+        }
+
+        // ============ CURRICULUM PAGE ============
+        const detailedCurriculumData = [
+            {
+                number: '01', title: 'React Interview Mastery',
+                topics: 'Modern JavaScript for React|ES6+ concepts|Components, Props & State|Functional Components|React Hooks|useState|useEffect|useRef|useMemo|useCallback|useReducer|useContext|useTransition|useDeferredValue|Custom Hooks|Component Lifecycle|Virtual DOM|Reconciliation|React Fiber|Rendering & Re-rendering|State batching|Memoization|Parent–Child Communication|Controlled vs Uncontrolled Components|Forms & Validation|Context API|Redux / Redux Toolkit|Routing|API Integration|Fetch / Axios|Promises & Async/Await|Error Handling|Lazy Loading|Suspense|Code Splitting|Performance Optimization|Security & XSS|Authentication / JWT|React Application Architecture|Debugging repeated renders|Memory leaks|Race conditions|Production troubleshooting'.split('|'),
+                focus: 'Scenario-based React questions for experienced frontend/full-stack developers.'
+            },
+            {
+                number: '02', title: 'Java Interview Mastery',
+                topics: 'OOP|Classes & Objects|Inheritance|Polymorphism|Abstraction|Encapsulation|Interfaces|Abstract Classes|Strings|Immutability|Wrapper Classes|Exception Handling|Generics|Collections Framework|ArrayList|LinkedList|HashMap|ConcurrentHashMap|HashSet|TreeMap|Comparable & Comparator|Internal working of collections|Java 8+|Lambda Expressions|Functional Interfaces|Method References|Streams|Advanced Stream scenarios|Collectors|Grouping & Partitioning|Optional|Date & Time API|Multithreading|Thread Lifecycle|Synchronization|Locks|volatile|Atomic Classes|Executor Framework|Thread Pools|CompletableFuture|Producer–Consumer|Deadlocks|JVM Architecture|JVM Memory Areas|Class Loading|Garbage Collection|Memory Leaks|Java Performance|Modern Java features'.split('|'),
+                focus: 'Senior-level Java internals, coding scenarios and production problem-solving questions.'
+            },
+            {
+                number: '03', title: 'Spring Ecosystem Interview Mastery',
+                topics: 'Spring Core|IoC|Dependency Injection|Bean Lifecycle|Bean Scopes|Spring Boot|Auto Configuration|Configuration Properties|Profiles|Spring MVC|REST APIs|Request Lifecycle|Exception Handling|Validation|Filters|Interceptors|Spring Data JPA|Hibernate|Entity Relationships|Lazy vs Eager Loading|N+1 Problems|Transactions|@Transactional|Transaction Propagation|Isolation Levels|Spring Security|JWT|OAuth2|OpenID Connect|Microservices|Service Discovery|API Gateway|Configuration Server|Resilience|Circuit Breaker|Retry|Rate Limiting|Observability|Spring Boot Actuator|Logging|Distributed Tracing|Kafka integration|Caching|Redis|Production troubleshooting'.split('|'),
+                focus: 'Spring Boot and Microservices questions expected from experienced Java developers.'
+            },
+            {
+                number: '04', title: 'Database Interview Mastery',
+                topics: 'Relational Database Fundamentals|SQL|Joins|Subqueries|CTEs|Window Functions|Aggregations|Stored Procedures|Views|Transactions|ACID|Isolation Levels|Locks|Deadlocks|Indexes|B-Tree concepts|Composite Indexes|Query Execution Plans|Query Optimization|Schema Design|Normalization|Denormalization|Primary & Foreign Keys|Constraints|Pagination|Optimistic Locking|Pessimistic Locking|Connection Pooling|High-volume data handling|Partitioning|Sharding|Replication|Read Replicas|SQL vs NoSQL|MongoDB concepts|Redis|Database caching|Database scaling|Production database troubleshooting'.split('|'),
+                focus: 'Database design, SQL optimization and real production-performance scenarios.'
+            },
+            {
+                number: '05', title: 'Distributed Systems Interview Mastery',
+                topics: 'Distributed System Fundamentals|Monolith vs Microservices|CAP Theorem|Consistency Models|Eventual Consistency|Distributed Transactions|Saga Pattern|Outbox Pattern|Two-Phase Commit|Idempotency|Messaging|Kafka|RabbitMQ concepts|Message Ordering|Duplicate Messages|Consumer Groups|Retry Strategies|Dead Letter Queues|API Gateway|Service Discovery|Load Balancing|Circuit Breaker|Bulkhead|Rate Limiting|Distributed Locks|Distributed Cache|Redis|Replication|Partitioning|Sharding|Leader Election|Fault Tolerance|High Availability|Event-Driven Architecture|CQRS|Event Sourcing|Distributed tracing|Observability|Failure handling'.split('|'),
+                focus: 'How senior engineers design systems that remain reliable when services, networks and infrastructure fail.'
+            },
+            {
+                number: '06', title: 'Cloud & DevOps Interview Mastery',
+                topics: 'Cloud Fundamentals|AWS / Azure concepts|Compute|Storage|Networking|IAM|VPC|Load Balancers|Auto Scaling|Cloud Databases|Docker|Images|Containers|Dockerfile|Container Networking|Kubernetes|Pods|Deployments|Services|ConfigMaps|Secrets|Ingress|ReplicaSets|Autoscaling|Rolling Deployment|Blue-Green Deployment|Canary Deployment|Jenkins|CI/CD|Git|Build Pipelines|Maven|Deployment pipelines|Infrastructure concepts|Monitoring|Logs|Metrics|Alerts|Prometheus|Grafana|ELK / Kibana concepts|Cloud troubleshooting|Production deployment failures'.split('|'),
+                focus: 'Deploying, scaling, monitoring and troubleshooting enterprise Java applications in production.'
+            },
+            {
+                number: '07', title: 'System Design Interview Mastery',
+                topics: 'Requirement Analysis|Functional Requirements|Non-Functional Requirements|Capacity Estimation|High-Level Design|Low-Level Design|API Design|REST API Design|Database Selection|Schema Design|Caching|Redis|CDN|Load Balancing|Horizontal Scaling|Vertical Scaling|Database Scaling|Replication|Partitioning|Sharding|Message Queues|Kafka|Event-Driven Design|Microservices|Distributed Transactions|High Availability|Fault Tolerance|Rate Limiting|Security|Observability|Logging|Metrics|Tracing|Disaster Recovery|Performance Optimization|Cost considerations|Design Trade-offs|Design Patterns'.split('|'),
+                scenarios: 'URL Shortener|Notification System|Payment System|Order Management|Ticket Booking|E-Commerce|Chat System|File Upload System|Bug Assignment System|Media Processing System|High-Traffic REST Platform'.split('|'),
+                focus: 'How to think, communicate and defend architecture decisions during senior-level system-design interviews.'
+            },
+            {
+                number: '08', title: 'AI for Developers Interview Mastery',
+                topics: 'AI Fundamentals for Software Developers|Generative AI|Large Language Models|Tokens|Context Windows|Prompt Engineering|Zero-Shot Prompting|Few-Shot Prompting|Structured Prompts|LLM APIs|Integrating AI with Java applications|AI-assisted coding|Code Generation|Code Review|Unit-Test Generation|Documentation Generation|Debugging with AI|Embeddings|Vector Databases|Semantic Search|Retrieval-Augmented Generation — RAG|Chunking|Retrieval|Grounding|Hallucinations|Function / Tool Calling|AI Agents|Agentic Workflows|Guardrails|Security|Prompt Injection|Data Privacy|Evaluation|Cost & Token Optimization|AI Application Architecture|Enterprise AI Use Cases'.split('|'),
+                focus: 'AI concepts a modern Java/full-stack developer should understand and confidently discuss in interviews.'
+            }
+        ];
+
+        function renderCurriculumPage() {
+            const app = document.getElementById('app');
+            const curriculumHTML = `
+                ${renderNavbar('curriculum')}
+                
+                <section class="curriculum-page container">
+                    <a href="${routeHref('/')}" class="back-to-home" onclick="handleNavigation(event, '/')">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                    
+                    <div class="curriculum-header">
+                        <h1>JAVA FULL STACK<br><span class="gold-gradient">INTERVIEW MASTERY PROGRAM</span></h1>
+                        <p class="curriculum-subtitle">8 Specialized Interview Mastery Courses<br><strong>For Experienced Java Full Stack Developers</strong></p>
+                        <p class="curriculum-meta">8 Courses • 48 Hours • Weekend Intensive</p>
+                        <p style="max-width:900px; margin:1rem auto 0; color:var(--text-muted);">Build interview confidence across <strong>Frontend • Java • Spring • Database • Distributed Systems • Cloud • System Design • AI</strong> with practical, scenario-based, senior-level interview preparation.</p>
+                    </div>
+
+                    <section class="program-format">
+                        <h2>Program Format</h2>
+                        <div class="program-format-grid">
+                            <div class="format-item"><strong>Duration per Course</strong><br>1 Day — 6 Hours of Training</div>
+                            <div class="format-item"><strong>Session Window</strong><br>9:00 AM – 4:00 PM</div>
+                            <div class="format-item"><strong>Breaks</strong><br>15 Min + 30 Min Lunch + 15 Min</div>
+                            <div class="format-item"><strong>Individual Course Fee</strong><br>₹1,999/-</div>
+                            <div class="format-item"><strong>Complete 8-Course Combo</strong><br>₹9,999/-</div>
+                            <div class="format-item"><strong>Weekend Format</strong><br>Saturday & Sunday batches</div>
+                        </div>
+                        <p style="margin-top:1rem; color:var(--text-muted);"><strong>Additional Support:</strong> Weekday doubt clarification and interview-question support</p>
+                    </section>
+                    
+                    <div class="horizontal-steps" id="horizontalSteps">
+                        ${detailedCurriculumData.map(course => `
+                            <button type="button" class="step-tab ${course.number === '01' ? 'active' : ''}" 
+                                 data-course="${course.number}" 
+                                 onclick="switchCourse('${course.number}')">
+                                <span class="step-num">${course.number}</span>
+                                <span class="step-label">${course.title.replace(' Interview Mastery', '')}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <div class="curriculum-layout">
+                        <div class="course-content" id="courseContent">
+                            ${renderCourseContent('01')}
+                        </div>
+                    </div>
+
+                    ${renderCurriculumExtras()}
+                </section>
+                
+                ${renderFooter()}
+            `;
+            
+            app.innerHTML = curriculumHTML;
+        }
+
+        function renderCurriculumExtras() {
+            const courses = detailedCurriculumData.map(course => `<li>${course.title}</li>`).join('');
+            const audience = 'Java Full Stack Developers|Senior Software Engineers|Technical Leads|Lead Developers|Backend Developers|Full Stack Developers|Developers preparing for product-company interviews|Developers returning to the job market|Professionals targeting senior engineering roles|Developers with approximately 5–15+ years of experience'.split('|');
+            const approaches = [
+                ['1. Concept Revision', 'Refresh important concepts quickly.'],
+                ['2. Experienced-Level Interview Questions', 'Understand what interviewers expect from senior candidates.'],
+                ['3. Scenario-Based Questions', 'Handle questions without direct textbook answers.'],
+                ['4. Real Project Discussions', 'Connect concepts with actual application architecture.'],
+                ['5. Troubleshooting Questions', 'Understand failures, bottlenecks and debugging approaches.'],
+                ['6. Design Questions', 'Learn how to make and defend engineering decisions.'],
+                ['7. Interview Answer Structuring', 'Learn how to explain technical answers clearly and professionally.']
+            ];
+
+            return `
+                <section class="curriculum-extra">
+                    <h2>Complete Interview Mastery Package</h2>
+                    <h3>All 8 Courses</h3>
+                    <ul>${courses}</ul>
+                    <div class="package-grid">
+                        <div class="info-card"><h3>Individual Price</h3><p>₹1,999 × 8 = ₹15,992</p></div>
+                        <div class="info-card"><h3>Complete Package Offer</h3><div class="price-highlight">₹9,999/-</div><p>You Save ₹5,993</p></div>
+                        <div class="info-card"><h3>Total Training</h3><p>48 instructor-led hours<br>8 Training Days × 6 Hours</p></div>
+                    </div>
+                    <p style="margin-top:1.25rem; color:var(--text-muted);">Weekend-oriented delivery: <strong>Saturday — One Mastery Stack</strong> and <strong>Sunday — One Mastery Stack</strong>, enabling completion across approximately <strong>4 weekends</strong>.</p>
+                </section>
+
+                <section class="curriculum-extra">
+                    <h2>Who Should Attend?</h2>
+                    <p>This program is designed primarily for:</p>
+                    <ul>${audience.map(item => `<li>${item}</li>`).join('')}</ul>
+                </section>
+
+                <section class="curriculum-extra">
+                    <h2>What Makes This Program Different?</h2>
+                    <p>This is <strong>not only concept revision</strong>.</p>
+                    <div class="interview-focus" style="font-size:1.05rem;">Concept → Interview Question → Real-Time Scenario → Architecture Decision → Troubleshooting → Senior-Level Explanation</div>
+                    <p style="margin-top:1rem; color:var(--text-muted);">You learn not only <strong>what the answer is</strong>, but also <strong>how an experienced engineer should explain it during an interview.</strong></p>
+                </section>
+
+                <section class="curriculum-extra">
+                    <h2>Training Approach</h2>
+                    <div class="approach-grid">${approaches.map(item => `<div class="info-card"><h3>${item[0]}</h3><p>${item[1]}</p></div>`).join('')}</div>
+                </section>
+
+                <section class="curriculum-extra">
+                    <h2>Course Investment</h2>
+                    <div class="package-grid">
+                        <div class="info-card"><h3>Any Individual Mastery Course</h3><p class="price-highlight" style="font-size:2rem;">₹1,999/-</p></div>
+                        <div class="info-card"><h3>Complete 8-Course Program</h3><p class="price-highlight" style="font-size:2rem;">₹9,999/-</p></div>
+                        <div class="info-card"><h3>Program Details</h3><p>48 Hours<br>Weekend Intensive Training<br>Weekday doubt clarification + interview preparation support</p></div>
+                    </div>
+                </section>
+
+                <section class="curriculum-extra" id="registration">
+                    <h2>Registration</h2>
+                    <h3>Java Full Stack Interview Mastery</h3>
+                    <p>8 Mastery Stacks • 48 Hours • Senior-Level Interview Preparation</p>
+                    <p style="color:var(--gold); font-weight:700; margin-top:.75rem;">JAVA • SPRING • REACT • DATABASE • DISTRIBUTED SYSTEMS • CLOUD & DEVOPS • SYSTEM DESIGN • AI</p>
+                    <div class="contact-links">
+                        <a class="contact-link whatsapp" href="https://wa.me/918881178888" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> 8881178888</a>
+                        <a class="contact-link instagram" href="https://www.instagram.com/slokamtech?igsi=MTZ3aG5idHN1cXFkbA==" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> @slokamtech</a>
+                    </div>
+                    <p style="margin-top:2rem;">One Goal:</p>
+                    <div class="price-highlight">GET INTERVIEW READY. 🚀</div>
+                </section>
+            `;
+        }
+
+        function renderMasteryGroups(topics) {
+            const groupTitles = [
+                'Foundations & Essentials',
+                'Core Interview Concepts',
+                'Advanced Engineering',
+                'Architecture & Production'
+            ];
+            const groupSize = Math.ceil(topics.length / groupTitles.length);
+
+            return groupTitles.map((title, index) => {
+                const groupTopics = topics.slice(index * groupSize, (index + 1) * groupSize);
+                if (!groupTopics.length) return '';
+
+                return `
+                    <section class="mastery-group">
+                        <h4>${title}</h4>
+                        <ul>
+                            ${groupTopics.map(topic => `<li class="mastery-topic"><i class="fas fa-check-circle"></i><span>${topic}</span></li>`).join('')}
+                        </ul>
+                    </section>
+                `;
+            }).join('');
+        }
+
+        function renderCourseContent(courseNumber) {
+            const course = detailedCurriculumData.find(item => item.number === String(courseNumber).padStart(2, '0'));
+            if (!course) return '';
+            
+            return `
+                <div style="color:var(--blue-electric); font-weight:800;">${course.number}/08</div>
+                <h2>${course.title}</h2>
+                <div class="course-facts">
+                    <span class="course-fact"><i class="far fa-clock"></i> 6 Hours | 1 Day</span>
+                    <span class="course-fact">Fee: ₹1,999/-</span>
+                </div>
+                <h3>What You Will Master</h3>
+                <div class="mastery-groups">
+                    ${renderMasteryGroups(course.topics)}
+                </div>
+                ${course.scenarios ? `<h3 style="margin-top:1.5rem;">Real-Time Design Scenarios</h3><div class="mastery-groups"><section class="mastery-group"><h4>Design Exercises</h4><ul>${course.scenarios.map(topic => `<li class="mastery-topic"><i class="fas fa-diagram-project"></i><span>${topic}</span></li>`).join('')}</ul></section></div>` : ''}
+                <div class="interview-focus"><strong>Interview Focus</strong><br>${course.focus}</div>
+            `;
+        }
+
+        function switchCourse(courseNumber) {
+            const tabs = document.querySelectorAll('.step-tab');
+            tabs.forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.course === courseNumber);
+            });
+            
+            const contentArea = document.getElementById('courseContent');
+            if (contentArea) {
+                contentArea.innerHTML = renderCourseContent(courseNumber);
+            }
+        }
+
+        // ============ ROUTE HANDLERS ============
+        router.addRoute('/', () => {
+            renderLandingPage();
+        });
+
+        router.addRoute('/ciriculam', () => {
+            renderCurriculumPage();
+        });
+
+        router.addRoute('*', () => {
+            router.navigate('/');
+        });
+
+        // ============ LANDING PAGE SCRIPTS ============
+        function initLandingPageScripts() {
+            window.onscroll = () => {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 50) nav.classList.add('scrolled');
+                else nav.classList.remove('scrolled');
+            };
+            
+            // Keep the hero video autoplaying continuously when the browser permits it.
+            const heroVideo = document.querySelector('.hero-video');
+            if (heroVideo) {
+                heroVideo.muted = true;
+                heroVideo.setAttribute('muted', '');
+                heroVideo.setAttribute('playsinline', '');
+                const startHeroVideo = () => {
+                    const playPromise = heroVideo.play();
+                    if (playPromise && typeof playPromise.catch === 'function') {
+                        playPromise.catch(() => {});
+                    }
+                };
+                startHeroVideo();
+                heroVideo.addEventListener('canplay', startHeroVideo, { once: true });
+                heroVideo.addEventListener('pause', startHeroVideo);
+            }
+
+            const progressFill = document.getElementById('progressFill');
+            const progressPercent = document.getElementById('progressPercent');
+            if (progressFill && progressPercent) {
+                let cycleStartTime;
+                const animationDuration = 4000;
+                const resetDelay = 500;
+                const cycleDuration = animationDuration + resetDelay;
+                
+                function animateProgress(timestamp) {
+                    if (cycleStartTime === undefined) cycleStartTime = timestamp;
+
+                    const elapsed = (timestamp - cycleStartTime) % cycleDuration;
+                    const currentProgress = elapsed < animationDuration
+                        ? Math.min(100, (elapsed / animationDuration) * 100)
+                        : 100;
+
+                    progressFill.style.width = currentProgress + '%';
+                    progressPercent.textContent = Math.floor(currentProgress) + '%';
+                    landingProgressAnimationFrame = requestAnimationFrame(animateProgress);
+                }
+                
+                const loaderSection = document.querySelector('.loader-section');
+                if (loaderSection) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                landingProgressAnimationFrame = requestAnimationFrame(animateProgress);
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.3 });
+                    observer.observe(loaderSection);
+                }
+            }
+            
+            const revealElements = document.querySelectorAll('.glass-card, .category-card, .benefit-item');
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.style.opacity = 1;
+                });
+            }, { threshold: 0.2 });
+            
+            revealElements.forEach(el => {
+                el.style.opacity = 0;
+                el.style.transition = 'opacity 0.7s';
+                revealObserver.observe(el);
+            });
+        }
+
+        // Initial route resolution.
+        // 404.html may redirect a deep link to:
+        // /slokamtech/?route=/ciriculam
+        // The Router consumes that route and restores the clean URL.
+        router.handleRoute();
+    </script>
+
+</body>
+</html>

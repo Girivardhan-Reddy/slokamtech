@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code for Java Full-Stack Developers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --bg: #050b16;
+      --bg-2: #0a1220;
+      --panel: rgba(12, 20, 34, 0.82);
+      --panel-strong: rgba(14, 21, 36, 0.96);
+      --card: rgba(17, 28, 45, 0.9);
+      --card-soft: rgba(25, 38, 58, 0.78);
+      --text: #edf3ff;
+      --text-soft: #bfd0eb;
+      --text-muted: #8fa9cb;
+      --line: rgba(122, 148, 198, 0.18);
+      --purple: #8b5cf6;
+      --purple-2: #a78bfa;
+      --blue: #60a5fa;
+      --cyan: #67e8f9;
+      --gold: #f5c542;
+      --gold-soft: #ffd86f;
+      --success: #34d399;
+      --danger: #f87171;
+      --shadow: 0 30px 70px rgba(5, 11, 22, 0.7);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --container: 1200px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(139, 92, 246, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.12), transparent 26%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 1.2rem;
+    }
+
+    .section {
+      padding: 5.5rem 0;
+      position: relative;
+    }
+
+    .section-header {
+      max-width: 780px;
+      margin: 0 auto 2.6rem;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 0.48rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #d9d6ff;
+      background: rgba(139, 92, 246, 0.14);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      margin-bottom: 1rem;
+    }
+
+    h1, h2, h3, h4 {
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+    }
+
+    h1 {
+      font-size: clamp(2.6rem, 5vw, 5.2rem);
+      margin-bottom: 0.8rem;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 3vw, 3rem);
+      margin-bottom: 1.1rem;
+    }
+
+    h3 {
+      font-size: clamp(1.2rem, 2vw, 1.65rem);
+      margin-bottom: 0.8rem;
+    }
+
+    p {
+      color: var(--text-soft);
+    }
+
+    .muted {
+      color: var(--text-muted);
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg, #e9d5ff 0%, #c4b5fd 18%, #93c5fd 56%, #f5c542 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(5, 11, 22, 0.72);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(96, 165, 250, 0.14);
+    }
+
+    .nav-inner {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.04em;
+    }
+
+    .nav-brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(96, 165, 250, 0.65));
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      color: white;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      list-style: none;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+
+    .nav-links a {
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--gold-soft);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-link {
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), #d4a017);
+      color: #0a1220;
+      padding: 0.9rem 1.5rem;
+      box-shadow: 0 0 30px rgba(245, 197, 66, 0.24);
+    }
+
+    .btn-secondary {
+      padding: 0.82rem 1.4rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text);
+    }
+
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 1.7rem;
+      cursor: pointer;
+    }
+
+    .hero {
+      padding-top: 3.5rem;
+      padding-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2.3vw, 1.6rem);
+      font-weight: 700;
+      color: #dfeaff;
+      margin-bottom: 1rem;
+    }
+
+    .hero-desc {
+      max-width: 620px;
+      font-size: 1.08rem;
+      color: var(--text-soft);
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin: 1.7rem 0 1.4rem;
+    }
+
+    .workflow-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 1.5rem;
+    }
+
+    .workflow-badges span {
+      background: rgba(17, 28, 45, 0.9);
+      border: 1px solid rgba(96, 165, 250, 0.2);
+      color: #d9eafb;
+      border-radius: 999px;
+      padding: 0.58rem 0.8rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .workflow-sequence {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem;
+      margin-top: 1.1rem;
+      color: #dfe9ff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .workflow-sequence span {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.42rem 0.55rem;
+      border-radius: 999px;
+    }
+
+    .workflow-arrow {
+      color: var(--gold-soft);
+      opacity: 0.8;
+      font-size: 1rem;
+    }
+
+    .hero-panel {
+      position: relative;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .code-window {
+      width: min(100%, 560px);
+      background: rgba(9, 14, 24, 0.97);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+
+    .window-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(18, 28, 42, 0.97);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0.8rem 1rem;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.red { background: #f87171; }
+    .dot.yellow { background: #fbbf24; }
+    .dot.green { background: #34d399; }
+
+    .window-tabs {
+      display: flex;
+      gap: 0.5rem;
+      color: var(--text-soft);
+      font-size: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 0.42rem 0.68rem;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .window-body {
+      padding: 1.1rem 1rem 1rem;
+      background: linear-gradient(180deg, rgba(11, 18, 30, 0.98), rgba(7, 12, 24, 0.98));
+    }
+
+    .code-lines {
+      font-family: 'Consolas', 'SFMono-Regular', monospace;
+      color: #dfeaff;
+      font-size: 0.84rem;
+      line-height: 1.7;
+      letter-spacing: 0.02em;
+    }
+
+    .code-line { display: block; }
+    .token-blue { color: #8ec8ff; }
+    .token-green { color: #9ae6b4; }
+    .token-purple { color: #c4b5fd; }
+    .token-gold { color: #facc15; }
+    .token-gray { color: #98a9c8; }
+
+    .terminal {
+      margin-top: 1.2rem;
+      background: rgba(8, 12, 20, 0.96);
+      border: 1px solid rgba(96, 165, 250, 0.18);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 0.9rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(16, 24, 34, 0.95);
+      color: var(--text-soft);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .terminal-body {
+      padding: 1rem 0.9rem 1.1rem;
+      color: #dfeeff;
+      font-family: 'Consolas', 'SFMono-Regular', monospace;
+      font-size: 0.78rem;
+      line-height: 1.8;
+      min-height: 150px;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 9px;
+      height: 1em;
+      vertical-align: text-bottom;
+      background: var(--gold-soft);
+      animation: blink 1s steps(1) infinite;
+      margin-left: 3px;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 540px;
+      height: 540px;
+      right: -120px;
+      top: -80px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.25), transparent 60%);
+      filter: blur(18px);
+      pointer-events: none;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(17, 28, 45, 0.8), rgba(17, 28, 45, 0.62));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 1.6rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .card i {
+      color: var(--gold-soft);
+      font-size: 1.4rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .card p {
+      margin-top: 0.4rem;
+      color: var(--text-soft);
+    }
+
+    .dark-panel {
+      background: linear-gradient(180deg, rgba(10, 17, 28, 0.95), rgba(14, 22, 35, 0.92));
+      border: 1px solid rgba(96, 165, 250, 0.12);
+      border-radius: 30px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .project-diagram {
+      margin-top: 2rem;
+      display: grid;
+      gap: 1rem;
+      max-width: 980px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .diagram-layer {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .diagram-box {
+      background: rgba(16, 24, 35, 0.9);
+      border: 1px solid rgba(96, 165, 250, 0.15);
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      font-weight: 700;
+      color: #e8f0ff;
+      min-width: 180px;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+
+    .diagram-box.micro {
+      min-width: 150px;
+      background: rgba(15, 25, 42, 0.92);
+    }
+
+    .diagram-box.large {
+      min-width: 320px;
+    }
+
+    .diagram-box.small {
+      min-width: 120px;
+    }
+
+    .diagram-arrow {
+      color: var(--gold-soft);
+      font-size: 1.2rem;
+      margin: 0 0.4rem;
+      align-self: center;
+    }
+
+    .arrow-stack {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--gold-soft);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .scenario-grid {
+      display: grid;
+      gap: 1.3rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .scenario {
+      background: rgba(14, 22, 36, 0.9);
+      border: 1px solid rgba(96, 165, 250, 0.16);
+      border-radius: 18px;
+      padding: 1.4rem;
+    }
+
+    .flow-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.8rem;
+      font-size: 0.88rem;
+      color: var(--text-soft);
+    }
+
+    .flow-list .step {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 0.7rem 0.8rem;
+    }
+
+    .step-index {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--bg);
+      background: linear-gradient(135deg, var(--gold-soft), #f5c542);
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .concept-card {
+      background: rgba(11, 18, 30, 0.92);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 18px;
+      padding: 1.1rem 0.9rem;
+      min-height: 200px;
+    }
+
+    .concept-card h4 {
+      margin: 0.75rem 0 0.7rem;
+      font-size: 1.1rem;
+    }
+
+    .concept-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: var(--text-soft);
+      font-size: 0.8rem;
+    }
+
+    .concept-card li::before {
+      content: '•';
+      color: var(--gold-soft);
+      margin-right: 0.45rem;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 1rem;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 1rem;
+      background: rgba(15, 22, 33, 0.9);
+      border: 1px solid rgba(96, 165, 250, 0.12);
+      border-radius: 18px;
+      padding: 1.05rem 1.2rem;
+      align-items: center;
+    }
+
+    .timeline-time {
+      font-weight: 800;
+      color: var(--gold-soft);
+      letter-spacing: 0.03em;
+    }
+
+    .timeline-item strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .prereq-grid,
+    .audience-grid,
+    .outcomes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+    }
+
+    .pill {
+      background: rgba(17, 28, 45, 0.78);
+      border: 1px solid rgba(96, 165, 250, 0.18);
+      border-radius: 16px;
+      padding: 1rem 1.1rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+    }
+
+    .check-list {
+      list-style: none;
+      display: grid;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      color: var(--text-soft);
+    }
+
+    .check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 0.8rem 0.9rem;
+    }
+
+    .check-list li i {
+      color: var(--success);
+      margin-top: 0.18rem;
+    }
+
+    .faq {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .faq-item {
+      background: rgba(15, 22, 34, 0.9);
+      border: 1px solid rgba(96, 165, 250, 0.12);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font: inherit;
+      cursor: pointer;
+      padding: 1.1rem 1.2rem;
+      font-weight: 700;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .faq-answer p {
+      padding: 1rem 1.2rem 1.2rem;
+      color: var(--text-soft);
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 180px;
+    }
+
+    .faq-item .fa-chevron-down {
+      transition: transform 0.2s ease;
+    }
+
+    .faq-item.active .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    .register-box {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 1.6rem;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(16, 23, 36, 0.96), rgba(12, 18, 28, 0.92));
+      border: 1px solid rgba(96, 165, 250, 0.14);
+      border-radius: 28px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .register-side {
+      padding: 1rem 0.6rem;
+    }
+
+    .register-side .eyebrow {
+      margin-bottom: 1rem;
+    }
+
+    .register-form {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.45rem;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(11, 18, 30, 0.9);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(96, 165, 250, 0.5);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.12);
+    }
+
+    .final-cta {
+      text-align: center;
+      padding-top: 1rem;
+      padding-bottom: 2rem;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 2rem 0 3rem;
+      background: rgba(5,11,22,0.94);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .register-box {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-3,
+      .prereq-grid,
+      .audience-grid,
+      .outcomes-grid,
+      .concept-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .scenario-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-links {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: inline-block;
+      }
+
+      .nav-actions .back-link {
+        display: none;
+      }
+
+      .grid-3,
+      .prereq-grid,
+      .audience-grid,
+      .outcomes-grid,
+      .concept-grid,
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 2.5rem;
+      }
+
+      .hero-copy {
+        text-align: center;
+      }
+
+      .cta-row {
+        justify-content: center;
+      }
+
+      .workflow-badges,
+      .workflow-sequence {
+        justify-content: center;
+      }
+
+      .hydro-menu {
+        display: none;
+      }
+
+      .nav-open .nav-links {
+        display: flex;
+        position: absolute;
+        top: 100%;
+        left: 1.2rem;
+        right: 1.2rem;
+        flex-direction: column;
+        align-items: flex-start;
+        background: rgba(8, 13, 22, 0.98);
+        border: 1px solid rgba(96, 165, 250, 0.14);
+        border-radius: 18px;
+        padding: 1rem;
+      }
+
+      .nav-open {
+        position: relative;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="top">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand" aria-label="Back to workshops">
+        <span class="nav-brand-mark">&lt;/&gt;</span>
+        <span>Claude Code</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#workshop">Workshop</a></li>
+        <li><a href="#what-youll-learn">What You'll Learn</a></li>
+        <li><a href="#project">Project</a></li>
+        <li><a href="#curriculum">Curriculum</a></li>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Workshops</a>
+        <button class="btn btn-primary" type="button">Register Now</button>
+        <button class="nav-toggle" type="button" aria-label="Toggle menu" id="navToggle"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero section" id="workshop">
+      <div class="hero-glow"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <div class="eyebrow">1-Day Intensive Workshop</div>
+          <h1>Claude Code for<br><span class="gradient-text">Java Full-Stack Developers</span></h1>
+          <div class="hero-subtitle">Real-Project Implementation Program</div>
+          <p class="hero-desc">Learn how to use Claude Code across the real software-development lifecycle of a Java Full-Stack application.</p>
+
+          <div class="workflow-badges">
+            <span>Java</span>
+            <span>Spring Boot</span>
+            <span>React</span>
+            <span>MySQL / PostgreSQL</span>
+            <span>Microservices</span>
+            <span>REST APIs</span>
+            <span>Git</span>
+          </div>
+
+          <div class="workflow-sequence" aria-label="Development workflow">
+            <span>Understand</span>
+            <span class="workflow-arrow">→</span>
+            <span>Plan</span>
+            <span class="workflow-arrow">→</span>
+            <span>Implement</span>
+            <span class="workflow-arrow">→</span>
+            <span>Test</span>
+            <span class="workflow-arrow">→</span>
+            <span>Debug</span>
+            <span class="workflow-arrow">→</span>
+            <span>Review</span>
+            <span class="workflow-arrow">→</span>
+            <span>Deliver</span>
+          </div>
+
+          <div class="cta-row">
+            <a href="#register" class="btn btn-primary">Register for Workshop</a>
+          </div>
+        </div>
+
+        <div class="hero-panel reveal">
+          <div class="code-window">
+            <div class="window-header">
+              <div class="window-controls">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-tabs">
+                <span class="tab">ProjectController.java</span>
+                <span class="tab">OrderService.java</span>
+                <span class="tab">application.yml</span>
+              </div>
+            </div>
+            <div class="window-body">
+              <div class="code-lines">
+                <span class="code-line"><span class="token-purple">@RestController</span></span>
+                <span class="code-line"><span class="token-purple">public</span> <span class="token-blue">class</span> <span class="token-gold">ProjectController</span> {</span>
+                <span class="code-line">&nbsp;&nbsp;<span class="token-purple">@GetMapping</span>(<span class="token-green">"/orders"</span>)</span>
+                <span class="code-line">&nbsp;&nbsp;<span class="token-purple">public</span> <span class="token-blue">ResponseEntity</span>&lt;List&lt;Order&gt;&gt; getOrders() {</span>
+                <span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-purple">return</span> <span class="token-blue">ResponseEntity</span>.ok(orderService.getAllOrders());</span>
+                <span class="code-line">&nbsp;&nbsp;}</span>
+                <span class="code-line">}</span>
+                <span class="code-line"><span class="token-gray">// Validate requirement and impact before coding</span></span>
+              </div>
+
+              <div class="terminal">
+                <div class="terminal-header">
+                  <span>Terminal</span>
+                  <span>Claude Code</span>
+                </div>
+                <div class="terminal-body">
+                  <div>&gt; Claude Code</div>
+                  <div>Analyzing codebase...</div>
+                  <div>Understanding architecture...</div>
+                  <div>Building implementation plan...</div>
+                  <div>Ready to assist!<span class="cursor"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="what-youll-learn">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">This is not a demo</div>
+          <h2>NOT A DEMO. NOT JUST PROMPTING.</h2>
+          <p>Work with an existing enterprise-style project and learn how experienced developers use Claude Code throughout the development lifecycle — from requirement to delivery.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card reveal">
+            <i class="fas fa-project-diagram"></i>
+            <h3>Real Project</h3>
+            <p>Work with a realistic Java Full-Stack application with microservices architecture.</p>
+          </article>
+          <article class="card reveal">
+            <i class="fas fa-arrow-progress"></i>
+            <h3>End-to-End Workflow</h3>
+            <p>Go from understanding existing code to implementation, testing and delivery.</p>
+          </article>
+          <article class="card reveal">
+            <i class="fas fa-magnifying-glass-chart"></i>
+            <h3>Practical Scenarios</h3>
+            <p>Work through requirements, bugs, refactoring, testing and code reviews.</p>
+          </article>
+          <article class="card reveal">
+            <i class="fas fa-brain"></i>
+            <h3>AI as a Developer</h3>
+            <p>Learn how Claude Code can become part of your actual development workflow.</p>
+          </article>
+          <article class="card reveal">
+            <i class="fas fa-shield-halved"></i>
+            <h3>Production Practices</h3>
+            <p>Use engineering practices involving Git, testing, review and delivery quality.</p>
+          </article>
+          <article class="card reveal">
+            <i class="fas fa-laptop-code"></i>
+            <h3>Hands-on Delivery</h3>
+            <p>Implement a real requirement across the application lifecycle and verify results.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="project">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">The Project</div>
+          <h2>The Project You'll Work On</h2>
+          <p>Enterprise Project Management / E-Commerce Application</p>
+        </div>
+
+        <div class="dark-panel reveal">
+          <div class="project-diagram">
+            <div class="diagram-layer">
+              <div class="diagram-box">React Frontend</div>
+            </div>
+            <div class="arrow-stack">↓</div>
+            <div class="diagram-layer">
+              <div class="diagram-box large">API Gateway</div>
+            </div>
+            <div class="arrow-stack">↓</div>
+            <div class="diagram-layer">
+              <div class="diagram-box micro">User Service</div>
+              <div class="diagram-box micro">Product Service</div>
+              <div class="diagram-box micro">Order Service</div>
+              <div class="diagram-box micro">Notification Service</div>
+            </div>
+            <div class="arrow-stack">↓</div>
+            <div class="diagram-layer">
+              <div class="diagram-box small">MySQL / PostgreSQL</div>
+            </div>
+          </div>
+          <p style="text-align:center; margin-top:2rem; max-width:700px; margin-left:auto; margin-right:auto; color:var(--text-soft);">You will join an existing codebase, understand it, and implement real-world requirements.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="curriculum">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">What you'll do</div>
+          <h2>What You'll Do in the Workshop</h2>
+        </div>
+
+        <div class="grid-3">
+          <article class="card reveal">
+            <div class="step-index" style="margin-bottom:0.8rem;">01</div>
+            <h3>Explore Existing Code</h3>
+            <p>Understand modules, packages, controllers, services, repositories, entities, database interactions and dependencies.</p>
+          </article>
+          <article class="card reveal">
+            <div class="step-index" style="margin-bottom:0.8rem;">02</div>
+            <h3>Implement Requirements</h3>
+            <p>Analyze requirements, perform impact analysis and create implementation plans.</p>
+          </article>
+          <article class="card reveal">
+            <div class="step-index" style="margin-bottom:0.8rem;">03</div>
+            <h3>Build a Full-Stack Feature</h3>
+            <p>Work across React, REST APIs, Spring Boot, business logic, databases and microservices.</p>
+          </article>
+          <article class="card reveal">
+            <div class="step-index" style="margin-bottom:0.8rem;">04</div>
+            <h3>Debug & Fix Issues</h3>
+            <p>Use logs, stack traces, code and database interactions to identify root causes.</p>
+          </article>
+          <article class="card reveal">
+            <div class="step-index" style="margin-bottom:0.8rem;">05</div>
+            <h3>Refactor Existing Code</h3>
+            <p>Improve implementation and code quality while respecting the architecture.</p>
+          </article>
+          <article class="card reveal">
+            <div class="step-index" style="margin-bottom:0.8rem;">06</div>
+            <h3>Test & Verify</h3>
+            <p>Compile, test, debug failures, fix problems and verify the final implementation.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Real engineering scenarios</div>
+          <h2>Real Engineering Scenarios</h2>
+        </div>
+
+        <div class="scenario-grid">
+          <article class="scenario reveal">
+            <h3>Scenario 01</h3>
+            <p><strong>Joining an Existing Project</strong></p>
+            <div class="flow-list">
+              <div class="step"><span class="step-index">1</span> Repository</div>
+              <div class="step"><span class="step-index">2</span> Modules</div>
+              <div class="step"><span class="step-index">3</span> Controllers</div>
+              <div class="step"><span class="step-index">4</span> Services</div>
+              <div class="step"><span class="step-index">5</span> Repositories</div>
+              <div class="step"><span class="step-index">6</span> Entities</div>
+              <div class="step"><span class="step-index">7</span> Database</div>
+            </div>
+          </article>
+
+          <article class="scenario reveal">
+            <h3>Scenario 02</h3>
+            <p><strong>Real Change Request</strong></p>
+            <p style="margin-top:0.7rem; color:var(--text-soft);">Add discount support to the existing Order Management functionality.</p>
+            <div class="flow-list">
+              <div class="step"><span class="step-index">1</span> Requirement</div>
+              <div class="step"><span class="step-index">2</span> Existing Implementation</div>
+              <div class="step"><span class="step-index">3</span> Impact Analysis</div>
+              <div class="step"><span class="step-index">4</span> Files Affected</div>
+              <div class="step"><span class="step-index">5</span> Database Impact</div>
+              <div class="step"><span class="step-index">6</span> API Impact</div>
+              <div class="step"><span class="step-index">7</span> Implementation Plan</div>
+            </div>
+          </article>
+
+          <article class="scenario reveal">
+            <h3>Scenario 03</h3>
+            <p><strong>Full-Stack Feature</strong></p>
+            <p style="margin-top:0.7rem; color:var(--text-soft);">Order Cancellation</p>
+            <div class="flow-list">
+              <div class="step"><span class="step-index">1</span> React</div>
+              <div class="step"><span class="step-index">2</span> REST API</div>
+              <div class="step"><span class="step-index">3</span> Controller</div>
+              <div class="step"><span class="step-index">4</span> Service</div>
+              <div class="step"><span class="step-index">5</span> Business Rules</div>
+              <div class="step"><span class="step-index">6</span> Repository</div>
+              <div class="step"><span class="step-index">7</span> Database</div>
+              <div class="step"><span class="step-index">8</span> Notification</div>
+            </div>
+          </article>
+
+          <article class="scenario reveal">
+            <h3>Scenario 04</h3>
+            <p><strong>Production-Type Debugging</strong></p>
+            <div class="flow-list">
+              <div class="step"><span class="step-index">1</span> Logs</div>
+              <div class="step"><span class="step-index">2</span> Stack Trace</div>
+              <div class="step"><span class="step-index">3</span> Code</div>
+              <div class="step"><span class="step-index">4</span> Database</div>
+              <div class="step"><span class="step-index">5</span> Root Cause</div>
+              <div class="step"><span class="step-index">6</span> Fix</div>
+              <div class="step"><span class="step-index">7</span> Verification</div>
+            </div>
+          </article>
+
+          <article class="scenario reveal" style="grid-column:1 / -1;">
+            <h3>Scenario 05</h3>
+            <p><strong>Refactoring Existing Code</strong></p>
+            <div class="flow-list">
+              <div class="step"><span class="step-index">1</span> Controller</div>
+              <div class="step"><span class="step-index">2</span> Service</div>
+              <div class="step"><span class="step-index">3</span> Domain</div>
+              <div class="step"><span class="step-index">4</span> Repository</div>
+            </div>
+            <p style="margin-top:1rem; color:var(--gold-soft); font-weight:700;">Understand architecture before changing architecture.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background: rgba(7, 12, 22, 0.72);">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Engineering workflow</div>
+          <h2>See How the Workshop Workflow Works</h2>
+          <p>Experience the complete journey from an existing codebase to a delivered feature.</p>
+        </div>
+
+        <div class="final-cta reveal" style="padding-top:0; padding-bottom:1.5rem;">
+        </div>
+
+        <div class="concept-grid">
+          <article class="concept-card reveal">
+            <div class="eyebrow" style="font-size:0.62rem; letter-spacing:0.12em; padding:0.32rem 0.55rem; margin-bottom:0.8rem;">CLAUDE.md</div>
+            <h4>CLAUDE.md</h4>
+            <ul>
+              <li>Project context</li>
+              <li>Development standards</li>
+              <li>Java 21</li>
+              <li>Spring Boot</li>
+              <li>React</li>
+              <li>MySQL</li>
+              <li>Maven</li>
+              <li>Docker</li>
+            </ul>
+          </article>
+
+          <article class="concept-card reveal">
+            <div class="eyebrow" style="font-size:0.62rem; letter-spacing:0.12em; padding:0.32rem 0.55rem; margin-bottom:0.8rem;">Rules</div>
+            <h4>Rules</h4>
+            <ul>
+              <li>Constructor Injection</li>
+              <li>DTOs</li>
+              <li>Validation</li>
+              <li>Exception Handling</li>
+              <li>Transactions</li>
+              <li>Logging</li>
+              <li>Testing</li>
+              <li>Security</li>
+            </ul>
+          </article>
+
+          <article class="concept-card reveal">
+            <div class="eyebrow" style="font-size:0.62rem; letter-spacing:0.12em; padding:0.32rem 0.55rem; margin-bottom:0.8rem;">Skills</div>
+            <h4>Skills</h4>
+            <ul>
+              <li>Create REST API</li>
+              <li>Create Feature</li>
+              <li>Debug Spring Boot</li>
+              <li>Review Code</li>
+              <li>Create Tests</li>
+            </ul>
+          </article>
+
+          <article class="concept-card reveal">
+            <div class="eyebrow" style="font-size:0.62rem; letter-spacing:0.12em; padding:0.32rem 0.55rem; margin-bottom:0.8rem;">Agents</div>
+            <h4>Agents</h4>
+            <ul>
+              <li>Java Developer</li>
+              <li>Spring Reviewer</li>
+              <li>Test Engineer</li>
+              <li>Security Reviewer</li>
+              <li>Database Reviewer</li>
+              <li>DevOps Engineer</li>
+            </ul>
+          </article>
+
+          <article class="concept-card reveal">
+            <div class="eyebrow" style="font-size:0.62rem; letter-spacing:0.12em; padding:0.32rem 0.55rem; margin-bottom:0.8rem;">MCP</div>
+            <h4>MCP</h4>
+            <ul>
+              <li>GitHub</li>
+              <li>Jira</li>
+              <li>Database</li>
+              <li>Documentation</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Git & review</div>
+          <h2>AI-Assisted Git Workflow</h2>
+        </div>
+
+        <div class="dark-panel reveal" style="max-width:980px; margin:0 auto;">
+          <div class="workflow-sequence" style="justify-content:center; margin-top:0; margin-bottom:1.2rem;">
+            <span>Existing Repository</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Understand Changes</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Implement</span>
+            <span class="workflow-arrow">↓</span>
+            <span>git diff</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Review</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Tests</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Commit</span>
+            <span class="workflow-arrow">↓</span>
+            <span>PR Review</span>
+          </div>
+
+          <div class="terminal" style="margin-top:0;">
+            <div class="terminal-header">
+              <span>Review Prompt</span>
+              <span>Senior Java Developer</span>
+            </div>
+            <div class="terminal-body">
+              <div>Review my current Git diff as a senior</div>
+              <div>Java developer.</div>
+              <div>Don't modify anything.</div>
+              <div></div>
+              <div>Identify:</div>
+              <div>• Bugs</div>
+              <div>• Security issues</div>
+              <div>• Architecture violations</div>
+              <div>• Missing tests</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Testing workflow</div>
+          <h2>Implementation Doesn't End at “Code Generated”</h2>
+        </div>
+
+        <div class="dark-panel reveal" style="max-width:980px; margin:0 auto;">
+          <div class="workflow-sequence" style="justify-content:center; margin-top:0; margin-bottom:1.2rem;">
+            <span>Implement</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Compile</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Unit Tests</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Integration Tests</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Failure</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Analyze</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Fix</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Run Again</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Verify</span>
+          </div>
+          <p style="text-align:center; font-weight:700; color:var(--text-soft);">JUnit • Mockito • Spring Boot Testing</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Capstone</div>
+          <h2>End-to-End Capstone</h2>
+          <p><strong>One Requirement. One Project. One Complete Engineering Workflow.</strong></p>
+        </div>
+
+        <div class="dark-panel reveal" style="max-width:1100px; margin:0 auto;">
+          <p style="text-align:center; font-size:1.15rem; font-weight:700; color:var(--gold-soft); margin-bottom:1.3rem;">Add "Order Return Request" functionality to the existing application.</p>
+          <div class="workflow-sequence" style="justify-content:center;">
+            <span>Read Requirement</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Explore Existing Project</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Clarify Requirement</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Impact Analysis</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Implementation Plan</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Database Changes</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Spring Boot Changes</span>
+            <span class="workflow-arrow">↓</span>
+            <span>REST API</span>
+            <span class="workflow-arrow">↓</span>
+            <span>React Changes</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Unit Tests</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Integration Tests</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Debug Failures</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Security Review</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Code Review</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Git Diff Review</span>
+            <span class="workflow-arrow">↓</span>
+            <span>Final Verification</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Agenda</div>
+          <h2>Complete 1-Day Agenda</h2>
+        </div>
+        <div class="timeline reveal">
+          <div class="timeline-item"><div class="timeline-time">09:30 – 10:00</div><div><strong>Registration & Setup</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">10:00 – 10:45</div><div><strong>Session 1: Claude Code + Existing Project</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">10:45 – 11:45</div><div><strong>Session 2: Codebase Exploration & Architecture</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">11:45 – 12:45</div><div><strong>Session 3: Requirements & Impact Analysis</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">01:45 – 03:30</div><div><strong>Session 4: Full-Stack Feature Implementation</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">03:30 – 04:30</div><div><strong>Session 5: Debugging & Refactoring</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">04:30 – 05:15</div><div><strong>Session 6: Testing & Verification</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">05:15 – 06:00</div><div><strong>Session 7: CLAUDE.md & Rules</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">06:00 – 06:45</div><div><strong>Session 8: Skills & Agents</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">06:45 – 07:15</div><div><strong>Session 9: MCP & Development Integrations</strong></div></div>
+          <div class="timeline-item"><div class="timeline-time">07:15 – 08:00</div><div><strong>Final: End-to-End Capstone Project</strong></div></div>
+        </div>
+        <p style="text-align:center; margin-top:1.5rem; color:var(--text-soft);">Timings may be adjusted. Short breaks and lunch break included.</p>
+      </div>
+    </section>
+
+    <section class="section" id="prerequisites">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Prerequisites</div>
+          <h2>Prerequisites</h2>
+        </div>
+
+        <div class="prereq-grid reveal">
+          <div class="pill">Java fundamentals</div>
+          <div class="pill">Basic Spring Boot knowledge</div>
+          <div class="pill">REST API understanding</div>
+          <div class="pill">Basic Git knowledge</div>
+          <div class="pill">Basic React familiarity</div>
+          <div class="pill">Laptop with development environment</div>
+        </div>
+        <p style="margin-top:1.5rem; text-align:center; max-width:760px; margin-left:auto; margin-right:auto; color:var(--text-soft);">This is a developer-focused workshop. Participants should be comfortable reading and understanding application code.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Who should attend</div>
+          <h2>Who Should Attend</h2>
+        </div>
+
+        <div class="audience-grid reveal">
+          <div class="pill">Java Developers</div>
+          <div class="pill">Spring Boot Developers</div>
+          <div class="pill">Full-Stack Developers</div>
+          <div class="pill">Backend Developers</div>
+          <div class="pill">Software Engineers</div>
+          <div class="pill">Developers exploring AI-assisted development</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background: rgba(9, 15, 26, 0.78);">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Learning outcomes</div>
+          <h2>By the End of the Workshop</h2>
+        </div>
+
+        <div class="outcomes-grid reveal">
+          <ul class="check-list" style="grid-column:1 / span 3;">
+            <li><i class="fas fa-check"></i> <span>Understand an existing Java Full-Stack architecture</span></li>
+            <li><i class="fas fa-check"></i> <span>Trace existing functionality</span></li>
+            <li><i class="fas fa-check"></i> <span>Analyze new requirements</span></li>
+            <li><i class="fas fa-check"></i> <span>Create implementation plans</span></li>
+            <li><i class="fas fa-check"></i> <span>Implement multi-file changes</span></li>
+            <li><i class="fas fa-check"></i> <span>Build Spring Boot functionality</span></li>
+            <li><i class="fas fa-check"></i> <span>Work with frontend changes</span></li>
+            <li><i class="fas fa-check"></i> <span>Debug application failures</span></li>
+            <li><i class="fas fa-check"></i> <span>Refactor existing code</span></li>
+            <li><i class="fas fa-check"></i> <span>Generate and execute tests</span></li>
+            <li><i class="fas fa-check"></i> <span>Review AI-generated code</span></li>
+            <li><i class="fas fa-check"></i> <span>Work with Git changes</span></li>
+            <li><i class="fas fa-check"></i> <span>Create CLAUDE.md</span></li>
+            <li><i class="fas fa-check"></i> <span>Define Rules</span></li>
+            <li><i class="fas fa-check"></i> <span>Create reusable Skills</span></li>
+            <li><i class="fas fa-check"></i> <span>Use specialized Agents</span></li>
+            <li><i class="fas fa-check"></i> <span>Understand MCP integrations</span></li>
+            <li><i class="fas fa-check"></i> <span>Establish a repeatable AI-assisted development workflow</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">FAQ</div>
+          <h2>Frequently Asked Questions</h2>
+        </div>
+
+        <div class="faq reveal">
+          <div class="faq-item active">
+            <button class="faq-question" type="button">
+              <span>Is this a Claude Code demo?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>No. This is a hands-on development workshop focused on applying Claude Code throughout the software lifecycle, including planning, implementation, testing, debugging and review.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Do I need Java knowledge?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Yes. The workshop is designed for Java Full-Stack developers who are comfortable reading and understanding real application code.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Will we work on a real project?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Yes. The workshop uses an existing enterprise-style project so participants work with real architecture, code paths and realistic engineering scenarios.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Is this only about prompting?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>No. Prompting is not the primary focus. The workshop emphasizes understanding, planning, implementation, testing, debugging, review and delivery.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Will CLAUDE.md, Rules, Skills and Agents be covered?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Yes. These are part of the workflow and are covered in practical sessions during the workshop.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Will MCP be covered?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Yes. The workshop includes how MCP-based integrations can connect Claude Code with development tools and project workflows.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Is there a certificate?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Only the actual workshop provider can confirm any certificate or completion acknowledgement. This page does not invent any additional certification details.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="register">
+      <div class="container">
+        <div class="register-box reveal">
+          <div class="register-side">
+            <div class="eyebrow">Register</div>
+            <h2>Register for the Workshop</h2>
+            <p>Reserve your place for this hands-on learning experience.</p>
+          </div>
+
+          <form id="workshopForm" class="register-form">
+            <div class="field-row">
+              <div>
+                <label for="fullName">Full Name</label>
+                <input id="fullName" name="fullName" type="text" placeholder="Enter your full name" required />
+              </div>
+              <div>
+                <label for="email">Email Address</label>
+                <input id="email" name="email" type="email" placeholder="name@example.com" required />
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <label for="phone">Phone Number</label>
+                <input id="phone" name="phone" type="tel" placeholder="Your phone number" required />
+              </div>
+              <div>
+                <label for="level">Experience Level</label>
+                <select id="level" name="level" required>
+                  <option value="Java Developer">Java Developer</option>
+                  <option value="Spring Boot Developer">Spring Boot Developer</option>
+                  <option value="Full-Stack Developer">Full-Stack Developer</option>
+                  <option value="Backend Developer">Backend Developer</option>
+                  <option value="Software Engineer">Software Engineer</option>
+                  <option value="Student">Student</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <label for="mode">Mode</label>
+                <select id="mode" name="mode">
+                  <option>Online</option>
+                  <option>Offline</option>
+                  <option>Online & Offline</option>
+                </select>
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <div style="display:flex; align-items:center; min-height:52px; color:var(--text-soft); font-size:0.96rem; font-weight:600;">
+                  Payment: Cashfree
+                </div>
+              </div>
+            </div>
+
+            <div id="formMessage" style="margin-bottom:1rem; display:none; font-size:0.93rem; color:var(--text-soft);"></div>
+
+            <button id="registerBtn" type="submit" class="btn btn-primary" style="max-width:260px;">Register for Workshop • Pay via Cashfree</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section final-cta">
+      <div class="container">
+        <div class="section-header reveal" style="margin-bottom:1.8rem;">
+          <div class="eyebrow">Ready to work</div>
+          <h2>Ready to Work With Claude Code on Real Software?</h2>
+          <p>Spend one intensive day learning how AI can become part of your actual Java Full-Stack development workflow.</p>
+        </div>
+        <a href="#register" class="btn btn-primary">Register for the Workshop →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="nav-brand" style="font-size:1rem;">
+          <span class="nav-brand-mark">&lt;/&gt;</span>
+          <span>Claude Code for Java Full-Stack Developers</span>
+        </div>
+
+        <div class="footer-links">
+          <a href="#workshop">Workshop</a>
+          <a href="#what-youll-learn">What You'll Learn</a>
+          <a href="#project">Project</a>
+          <a href="#curriculum">Curriculum</a>
+          <a href="#prerequisites">Prerequisites</a>
+          <a href="#faq">FAQ</a>
+        </div>
+
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Workshops</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:5000'
+      : 'http://127.0.0.1:5000';
+
+    const navToggle = document.getElementById('navToggle');
+    const nav = document.querySelector('.nav');
+
+    if (navToggle && nav) {
+      navToggle.addEventListener('click', () => {
+        nav.classList.toggle('nav-open');
+        const icon = navToggle.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+      });
+    }
+
+    document.querySelectorAll('.faq-question').forEach((button) => {
+      button.addEventListener('click', () => {
+        const item = button.parentElement;
+        item.classList.toggle('active');
+      });
+    });
+
+    const revealItems = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    const workshopForm = document.getElementById('workshopForm');
+    const formMessage = document.getElementById('formMessage');
+    const registerBtn = document.getElementById('registerBtn');
+
+    function setFormMessage(message, isError = false) {
+      formMessage.style.display = 'block';
+      formMessage.style.color = isError ? '#f9b9b9' : '#dfffe8';
+      formMessage.textContent = message;
+    }
+
+    workshopForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const experience = document.getElementById('level').value;
+      const mode = document.getElementById('mode').value;
+
+      setFormMessage('Creating secure payment...');
+      registerBtn.disabled = true;
+      registerBtn.textContent = 'Creating secure payment...';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/create-order`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, experience, mode })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || 'Unable to create payment order.');
+        }
+
+        setFormMessage('Redirecting to Cashfree...');
+
+        if (window.Cashfree && window.Cashfree.initCheckout) {
+          const checkoutOptions = {
+            paymentSessionId: data.payment_session_id,
+            redirectTarget: '_self'
+          };
+          window.Cashfree.initCheckout(checkoutOptions);
+        } else {
+          window.location.href = `${API_BASE_URL}/api/payment/return?order_id=${encodeURIComponent(data.order_id)}`;
+        }
+      } catch (error) {
+        setFormMessage(error.message || 'Payment could not be processed. Please try again.', true);
+        registerBtn.disabled = false;
+        registerBtn.textContent = 'Register for Workshop • Pay via Cashfree';
+      }
+    });
+  </script>
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+</body>
+</html>
