@@ -33,7 +33,7 @@ CURRENCY = "INR"
 COURSES = {
     "java-fullstack-claude": {
         "name": "Claude Code for Java Full-Stack Developers",
-        "amount": 4999,
+        "amount": 999,
     }
 }
 DEFAULT_COURSE_ID = "java-fullstack-claude"
