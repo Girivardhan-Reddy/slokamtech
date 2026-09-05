@@ -1,4 +1,3 @@
-import base64
 import hashlib
 import hmac
 import json
@@ -19,9 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5500").rstrip("/")
-CASHFREE_APP_ID = os.getenv("CASHFREE_APP_ID", "")
-CASHFREE_SECRET_KEY = os.getenv("CASHFREE_SECRET_KEY", "")
-CASHFREE_ENVIRONMENT = (os.getenv("CASHFREE_ENVIRONMENT", "sandbox") or "sandbox").lower()
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "")
+RAZORPAY_WEBHOOK_SECRET = os.getenv("RAZORPAY_WEBHOOK_SECRET", "")
+RAZORPAY_API_BASE_URL = "https://api.razorpay.com/v1"
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 DATABASE_URL = os.getenv("DATABASE_URL", "supabase-postgres")
@@ -122,7 +122,7 @@ def error_response(message, status=400, **details):
 
 def sanitize_error_message(message):
     safe = str(message or "Unknown server error.")
-    secret_values = [SUPABASE_KEY, CASHFREE_SECRET_KEY, os.getenv("DATABASE_URL", "")]
+    secret_values = [SUPABASE_KEY, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET, os.getenv("DATABASE_URL", "")]
     for secret in secret_values:
         if secret:
             safe = safe.replace(secret, "[REDACTED]")
@@ -171,13 +171,6 @@ def validate_phone(value):
 
 def validate_experience(value):
     return bool((value or "").strip())
-
-
-def generate_cashfree_customer_id(registration_id):
-    safe_id = re.sub(r"[^a-zA-Z0-9_-]", "_", str(registration_id or "")).strip("_-")
-    if not safe_id:
-        safe_id = hashlib.sha256(os.urandom(16)).hexdigest()[:12]
-    return f"cust_{safe_id}"
 
 
 def normalize_registration_payload(payload):
@@ -280,6 +273,7 @@ def update_registration(registration_id, values):
 
 def update_registration_order(order_id, registration_id, payment_session_id=None):
     payload = {
+        "cashfree_order_id": order_id,
         "payment_session_id": payment_session_id,
         "payment_status": "PENDING",
         "registration_status": "PAYMENT_PENDING",
@@ -304,49 +298,35 @@ def update_registration_payment(order_id, payment_status, registration_status, p
     return update_registration(row["id"], payload)
 
 
-def get_cashfree_base_url():
-    if CASHFREE_ENVIRONMENT == "production":
-        return "https://api.cashfree.com/pg"
-    return "https://sandbox.cashfree.com/pg"
+def razorpay_auth():
+    return (RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET)
 
 
-def make_cashfree_headers():
-    return {
-        "x-client-id": CASHFREE_APP_ID,
-        "x-client-secret": CASHFREE_SECRET_KEY,
-        "x-api-version": "2022-09-01",
-        "Content-Type": "application/json",
-    }
+def to_currency_subunits(amount):
+    return int(round(float(amount) * 100))
 
 
-def create_cashfree_order(order_id, registration):
-    if not CASHFREE_APP_ID or not CASHFREE_SECRET_KEY:
-        raise ValueError("Cashfree credentials are not configured.")
+def create_razorpay_order(receipt_id, registration):
+    if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET:
+        raise ValueError("Razorpay credentials are not configured.")
 
-    customer_id = generate_cashfree_customer_id(registration.get("id"))
     payload = {
-        "order_id": order_id,
-        "order_amount": float(registration["amount"]),
-        "order_currency": CURRENCY,
-        "customer_details": {
-            "customer_id": customer_id,
-            "customer_name": registration["full_name"],
-            "customer_email": registration["email"],
-            "customer_phone": registration["phone"],
+        "amount": to_currency_subunits(registration["amount"]),
+        "currency": CURRENCY,
+        "receipt": receipt_id[:40],
+        "notes": {
+            "registration_id": str(registration.get("id") or ""),
+            "course_id": registration["course_id"],
+            "course_name": registration["course_name"][:256],
+            "customer_name": registration["full_name"][:256],
+            "customer_email": registration["email"][:256],
+            "customer_phone": registration["phone"][:256],
         },
-        "order_meta": {
-            "return_url": f"{FRONTEND_URL}/payment-success.html?order_id={order_id}",
-        },
-        "order_note": f"{registration['course_name']} registration",
     }
 
-    notify_url = os.getenv("CASHFREE_NOTIFY_URL", "").strip()
-    if notify_url:
-        payload["order_meta"]["notify_url"] = notify_url
-
-    endpoint = f"{get_cashfree_base_url()}/orders"
-    app.logger.info("Creating Cashfree order order_id=%s amount=%s", order_id, payload["order_amount"])
-    response = requests.post(endpoint, json=payload, headers=make_cashfree_headers(), timeout=30)
+    endpoint = f"{RAZORPAY_API_BASE_URL}/orders"
+    app.logger.info("Creating Razorpay order receipt=%s amount=%s", receipt_id, payload["amount"])
+    response = requests.post(endpoint, json=payload, auth=razorpay_auth(), timeout=30)
     try:
         response.raise_for_status()
     except requests.HTTPError as exc:
@@ -354,71 +334,84 @@ def create_cashfree_order(order_id, registration):
             error_data = response.json()
         except ValueError:
             error_data = {"message": response.text[:300]}
-        app.logger.error("Cashfree order creation failed status=%s response=%s", response.status_code, error_data)
-        exc.cashfree_status_code = response.status_code
-        exc.cashfree_error = error_data
+        app.logger.error("Razorpay order creation failed status=%s response=%s", response.status_code, error_data)
+        exc.razorpay_status_code = response.status_code
+        exc.razorpay_error = error_data
         raise
 
     data = response.json()
-    payment_session_id = data.get("payment_session_id") or data.get("paymentSessionId") or data.get("payment_session")
-    if not payment_session_id:
-        raise ValueError("Cashfree order creation response did not include payment_session_id.")
-    return payment_session_id, data
+    razorpay_order_id = data.get("id")
+    if not razorpay_order_id:
+        raise ValueError("Razorpay order creation response did not include order id.")
+    return razorpay_order_id, data
 
 
 def get_order_status(order_id):
-    if not CASHFREE_APP_ID or not CASHFREE_SECRET_KEY:
-        raise ValueError("Cashfree credentials are not configured.")
-    response = requests.get(f"{get_cashfree_base_url()}/orders/{order_id}", headers=make_cashfree_headers(), timeout=30)
+    if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET:
+        raise ValueError("Razorpay credentials are not configured.")
+    response = requests.get(f"{RAZORPAY_API_BASE_URL}/orders/{order_id}", auth=razorpay_auth(), timeout=30)
     response.raise_for_status()
     return response.json()
 
 
 def get_order_payments(order_id):
-    if not CASHFREE_APP_ID or not CASHFREE_SECRET_KEY:
-        raise ValueError("Cashfree credentials are not configured.")
-    response = requests.get(f"{get_cashfree_base_url()}/orders/{order_id}/payments", headers=make_cashfree_headers(), timeout=30)
+    if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET:
+        raise ValueError("Razorpay credentials are not configured.")
+    response = requests.get(f"{RAZORPAY_API_BASE_URL}/orders/{order_id}/payments", auth=razorpay_auth(), timeout=30)
     response.raise_for_status()
     return response.json()
 
 
 def first_payment(payments):
+    if isinstance(payments, dict):
+        payments = payments.get("items") or []
     if isinstance(payments, list) and payments:
-        successful = [item for item in payments if str(item.get("payment_status", "")).upper() in {"SUCCESS", "PAID"}]
+        successful = [item for item in payments if str(item.get("status", "")).lower() in {"captured", "authorized"}]
         return successful[0] if successful else payments[0]
     return {}
 
 
-def map_cashfree_status(order_data, payment_data):
-    order_status = str(order_data.get("order_status") or order_data.get("status") or "").upper()
-    payment_status = str(payment_data.get("payment_status") or "").upper()
+def map_razorpay_status(order_data, payment_data):
+    order_status = str(order_data.get("status") or "").lower()
+    payment_status = str(payment_data.get("status") or "").lower()
     status = payment_status or order_status
-    if status in {"PAID", "SUCCESS"}:
+    if status in {"captured", "paid"}:
         return "PAID", "CONFIRMED"
-    if status in {"FAILED", "CANCELLED"}:
+    if status in {"failed"}:
         return "FAILED", "PAYMENT_FAILED"
-    if status == "USER_DROPPED":
-        return "USER_DROPPED", "PAYMENT_FAILED"
-    if status in {"PENDING", "ACTIVE"}:
+    if status in {"authorized", "created", "attempted"}:
         return "PENDING", "PAYMENT_PENDING"
     return "UNKNOWN", "PAYMENT_PENDING"
 
 
 def get_payment_id(payment_data):
     return (
-        payment_data.get("cf_payment_id")
+        payment_data.get("id")
+        or payment_data.get("razorpay_payment_id")
         or payment_data.get("bank_reference")
-        or payment_data.get("auth_id")
     )
 
 
-def verify_webhook_signature(raw_body, signature, timestamp):
-    if not CASHFREE_SECRET_KEY or not signature or not timestamp:
+def verify_razorpay_payment_signature(order_id, payment_id, signature):
+    if not RAZORPAY_KEY_SECRET or not order_id or not payment_id or not signature:
         return False
-    signed_payload = f"{timestamp}{raw_body}"
-    expected = base64.b64encode(
-        hmac.new(CASHFREE_SECRET_KEY.encode("utf-8"), signed_payload.encode("utf-8"), hashlib.sha256).digest()
-    ).decode("utf-8")
+    signed_payload = f"{order_id}|{payment_id}"
+    expected = hmac.new(
+        RAZORPAY_KEY_SECRET.encode("utf-8"),
+        signed_payload.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    return hmac.compare_digest(expected, signature)
+
+
+def verify_webhook_signature(raw_body, signature):
+    if not RAZORPAY_WEBHOOK_SECRET or not signature:
+        return False
+    expected = hmac.new(
+        RAZORPAY_WEBHOOK_SECRET.encode("utf-8"),
+        raw_body.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
     return hmac.compare_digest(expected, signature)
 
 
@@ -477,8 +470,8 @@ def build_receipt_pdf(registration):
         ["Payment Details", ""],
         ["Amount", f"{CURRENCY} {registration.get('amount', '')}"],
         ["Currency", CURRENCY],
-        ["Cashfree Order ID", registration.get("cashfree_order_id") or registration.get("order_id", "")],
-        ["Payment ID", registration.get("cashfree_payment_id", "")],
+        ["Razorpay Order ID", registration.get("cashfree_order_id") or registration.get("order_id", "")],
+        ["Payment ID", registration.get("cashfree_payment_id", "") or registration.get("payment_id", "")],
         ["Payment Status", registration.get("payment_status", "")],
         ["Payment Date", registration.get("paid_at") or registration.get("updated_at") or ""],
         ["Status", f"{registration.get('payment_status', '')} / {registration.get('registration_status', '')}"],
@@ -723,7 +716,7 @@ def health_check():
     return jsonify({
         "status": "ok",
         "timestamp": utc_now(),
-        "environment": CASHFREE_ENVIRONMENT,
+        "payment_gateway": "razorpay",
         "database": DATABASE_URL,
         "courses": list(COURSES.keys()),
     })
@@ -787,8 +780,8 @@ def create_order():
 
     if not SUPABASE_URL or not SUPABASE_KEY:
         return error_response("Supabase is not configured on the server.", 503)
-    if not CASHFREE_APP_ID or not CASHFREE_SECRET_KEY:
-        return error_response("Cashfree is not configured on the server.", 503)
+    if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET:
+        return error_response("Razorpay is not configured on the server.", 503)
 
     try:
         existing = get_registration_by_email(registration_input["email"])
@@ -801,41 +794,86 @@ def create_order():
         app.logger.exception("Supabase registration insert failed email=%s", masked_email(registration_input["email"]))
         return supabase_error_response("save registration", exc)
 
-    registration_for_cashfree = dict(registration_input)
-    registration_for_cashfree["id"] = registration_row.get("id")
+    registration_for_razorpay = dict(registration_input)
+    registration_for_razorpay["id"] = registration_row.get("id")
     try:
-        payment_session_id, cashfree_data = create_cashfree_order(order_id, registration_for_cashfree)
+        razorpay_order_id, razorpay_data = create_razorpay_order(order_id, registration_for_razorpay)
     except requests.HTTPError as exc:
-        details = getattr(exc, "cashfree_error", {}) or {}
-        cashfree_message = details.get("message") or details.get("error_description") or details.get("error") or "Cashfree rejected the order request."
-        return error_response(f"Cashfree order creation failed: {cashfree_message}", 502, cashfree_status_code=getattr(exc, "cashfree_status_code", None))
+        details = getattr(exc, "razorpay_error", {}) or {}
+        razorpay_message = details.get("description") or details.get("message") or details.get("error") or "Razorpay rejected the order request."
+        return error_response(f"Razorpay order creation failed: {razorpay_message}", 502, razorpay_status_code=getattr(exc, "razorpay_status_code", None))
     except Exception as exc:
-        app.logger.exception("Cashfree order creation failed order_id=%s", order_id)
+        app.logger.exception("Razorpay order creation failed receipt=%s", order_id)
         return error_response("Unable to create payment order right now.", 502)
 
     try:
-        update_registration_order(order_id, registration_row["id"], payment_session_id)
+        update_registration_order(razorpay_order_id, registration_row["id"])
     except Exception as exc:
-        app.logger.exception("Supabase registration update failed order_id=%s", order_id)
+        app.logger.exception("Supabase registration update failed order_id=%s", razorpay_order_id)
         return supabase_error_response("update registration", exc)
 
     return jsonify({
         "success": True,
-        "message": "Payment session created successfully.",
-        "order_id": order_id,
-        "cashfree_order_id": order_id,
+        "message": "Razorpay order created successfully.",
+        "order_id": razorpay_order_id,
+        "razorpay_order_id": razorpay_order_id,
+        "receipt_id": order_id,
         "status": "PENDING",
-        "payment_session_id": payment_session_id,
-        "order_token": payment_session_id,
+        "key_id": RAZORPAY_KEY_ID,
         "amount": registration_input["amount"],
+        "amount_subunits": razorpay_data.get("amount"),
         "currency": CURRENCY,
         "course_id": registration_input["course_id"],
         "course_name": registration_input["course_name"],
-        "cashfree": {
-            "order_status": cashfree_data.get("order_status"),
-            "payment_session_id": payment_session_id,
+        "prefill": {
+            "name": registration_input["full_name"],
+            "email": registration_input["email"],
+            "contact": registration_input["phone"],
+        },
+        "razorpay": {
+            "order_status": razorpay_data.get("status"),
+            "order_id": razorpay_order_id,
         },
     }), 201
+
+
+@app.route("/api/confirm-payment", methods=["POST"])
+def confirm_payment():
+    payload, json_error = get_json_payload()
+    if json_error:
+        return json_error
+
+    order_id = (payload.get("razorpay_order_id") or payload.get("order_id") or "").strip()
+    payment_id = (payload.get("razorpay_payment_id") or payload.get("payment_id") or "").strip()
+    signature = (payload.get("razorpay_signature") or "").strip()
+
+    if not validate_order_id(order_id):
+        return error_response("Invalid Razorpay order_id.", 400)
+    if not payment_id or not signature:
+        return error_response("Missing Razorpay payment details.", 400)
+
+    if not verify_razorpay_payment_signature(order_id, payment_id, signature):
+        return error_response("Invalid Razorpay payment signature.", 401)
+
+    try:
+        registration = get_registration_by_order_id(order_id)
+        if not registration:
+            return error_response("Registration not found for this order.", 404)
+        updated_rows = update_registration_payment(order_id, "PAID", "CONFIRMED", payment_id=payment_id)
+        registration = updated_rows[0] if updated_rows else get_registration_by_order_id(order_id)
+    except Exception as exc:
+        app.logger.exception("Payment confirmation failed order_id=%s", order_id)
+        return supabase_error_response("confirm payment", exc)
+
+    return jsonify({
+        "success": True,
+        "order_id": order_id,
+        "razorpay_order_id": order_id,
+        "payment_id": payment_id,
+        "payment_status": "PAID",
+        "registration_status": "CONFIRMED",
+        "registration": registration,
+    })
 
 
 @app.route("/api/verify-payment", methods=["GET"])
@@ -856,19 +894,18 @@ def verify_payment_order(order_id):
         order_data = get_order_status(order_id)
         payments = get_order_payments(order_id)
         payment_data = first_payment(payments)
-        payment_status, registration_status = map_cashfree_status(order_data, payment_data)
+        payment_status, registration_status = map_razorpay_status(order_data, payment_data)
         payment_id = get_payment_id(payment_data)
         updated_rows = update_registration_payment(
             order_id,
             payment_status,
             registration_status,
-            payment_session_id=registration.get("payment_session_id"),
             payment_id=payment_id,
         )
         registration = updated_rows[0] if updated_rows else get_registration_by_order_id(order_id)
     except requests.HTTPError as exc:
-        app.logger.exception("Cashfree payment verification failed order_id=%s", order_id)
-        return error_response("Unable to verify payment with Cashfree right now.", 502)
+        app.logger.exception("Razorpay payment verification failed order_id=%s", order_id)
+        return error_response("Unable to verify payment with Razorpay right now.", 502)
     except Exception as exc:
         app.logger.exception("Payment verification failed order_id=%s", order_id)
         return supabase_error_response("verify payment", exc)
@@ -876,7 +913,7 @@ def verify_payment_order(order_id):
     return jsonify({
         "success": payment_status == "PAID",
         "order_id": order_id,
-        "cashfree_order_id": order_id,
+        "razorpay_order_id": order_id,
         "payment_id": payment_id,
         "payment_status": payment_status,
         "registration_status": registration_status,
@@ -919,14 +956,13 @@ def download_receipt(order_id):
     )
 
 
-@app.route("/api/cashfree/webhook", methods=["POST"])
+@app.route("/api/razorpay/webhook", methods=["POST"])
 @app.route("/api/payment/webhook", methods=["POST"])
 def payment_webhook():
     raw_body = request.get_data(as_text=True)
-    signature = request.headers.get("x-webhook-signature") or request.headers.get("X-Webhook-Signature")
-    timestamp = request.headers.get("x-webhook-timestamp") or request.headers.get("X-Webhook-Timestamp")
+    signature = request.headers.get("X-Razorpay-Signature") or request.headers.get("x-razorpay-signature")
 
-    if not verify_webhook_signature(raw_body, signature, timestamp):
+    if not verify_webhook_signature(raw_body, signature):
         return error_response("Invalid webhook signature.", 401)
 
     try:
@@ -934,14 +970,22 @@ def payment_webhook():
     except ValueError:
         return error_response("Invalid webhook JSON payload.", 400)
 
-    data = payload.get("data") or {}
-    order_data = data.get("order") or data
-    payment_data = data.get("payment") or data
-    order_id = order_data.get("order_id") or data.get("order_id") or payload.get("order_id")
+    data = payload.get("payload") or payload.get("data") or {}
+    payment_entity = ((data.get("payment") or {}).get("entity") or data.get("payment") or {})
+    order_entity = ((data.get("order") or {}).get("entity") or data.get("order") or {})
+    order_data = order_entity or data
+    payment_data = payment_entity or data
+    order_id = (
+        payment_data.get("order_id")
+        or order_data.get("id")
+        or order_data.get("order_id")
+        or data.get("order_id")
+        or payload.get("order_id")
+    )
     if not order_id:
         return error_response("Missing order_id in webhook payload.", 400)
 
-    payment_status, registration_status = map_cashfree_status(order_data, payment_data)
+    payment_status, registration_status = map_razorpay_status(order_data, payment_data)
     payment_id = get_payment_id(payment_data)
     try:
         update_registration_payment(order_id, payment_status, registration_status, payment_id=payment_id)

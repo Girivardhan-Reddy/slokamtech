@@ -176,7 +176,7 @@
       <div id="statusHead" class="status-head">
         <div id="statusIcon" class="status-icon pending"><i class="fas fa-spinner fa-spin"></i></div>
         <h1 id="statusTitle">Verifying Payment</h1>
-        <p id="statusMessage">Please wait while we confirm your payment securely with Cashfree.</p>
+        <p id="statusMessage">Please wait while we confirm your payment securely with Razorpay.</p>
       </div>
 
       <div id="details" class="details" style="display:none;"></div>
@@ -226,8 +226,8 @@
         ['Email', value(registration, ['email'])],
         ['Phone', value(registration, ['phone'])],
         ['Amount Paid', `₹${value(registration, ['amount'])}`],
-        ['Payment ID', data.payment_id || value(registration, ['payment_id'])],
-        ['Order ID', data.cashfree_order_id || data.order_id || value(registration, ['cashfree_order_id', 'order_id'])],
+        ['Payment ID', data.payment_id || value(registration, ['payment_id', 'cashfree_payment_id'])],
+        ['Order ID', data.razorpay_order_id || data.order_id || value(registration, ['cashfree_order_id', 'order_id'])],
         ['Payment Status', data.payment_status || value(registration, ['payment_status'])],
         ['Registration Status', data.registration_status || value(registration, ['registration_status'])]
       ];
@@ -249,7 +249,7 @@
       statusIcon.className = 'status-icon pending';
       statusIcon.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       statusTitle.textContent = 'Verifying Payment';
-      statusMessage.textContent = 'Please wait while we confirm your payment securely with Cashfree.';
+      statusMessage.textContent = 'Please wait while we confirm your payment securely with Razorpay.';
 
       try {
         const response = await fetch(`${API_BASE_URL}/api/verify-payment?order_id=${encodeURIComponent(orderId)}`);
@@ -269,7 +269,7 @@
         } else {
           setIcon('pending');
           statusTitle.textContent = 'Payment Pending';
-          statusMessage.textContent = 'We are waiting for payment confirmation from Cashfree.';
+          statusMessage.textContent = 'We are waiting for payment confirmation from Razorpay.';
           receiptBtn.style.display = 'none';
           checkBtn.style.display = 'inline-flex';
         }

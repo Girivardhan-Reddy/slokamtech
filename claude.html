@@ -1716,14 +1716,14 @@
               <div>
                 <label>&nbsp;</label>
                 <div style="display:flex; align-items:center; min-height:52px; color:var(--text-soft); font-size:0.96rem; font-weight:600;">
-                  Payment: Cashfree
+                  Payment: Razorpay
                 </div>
               </div>
             </div>
 
             <div id="formMessage" style="margin-bottom:1rem; display:none; font-size:0.93rem; color:var(--text-soft);"></div>
 
-            <button id="registerBtn" type="submit" class="btn btn-primary" style="max-width:260px;">Register for Workshop • Pay via Cashfree</button>
+            <button id="registerBtn" type="submit" class="btn btn-primary" style="max-width:260px;">Register for Workshop • Pay via Razorpay</button>
           </form>
         </div>
       </div>
@@ -1843,24 +1843,73 @@
           throw new Error(data.error || data.message || 'Unable to create payment order.');
         }
 
-        setFormMessage('Redirecting to Cashfree...');
+        setFormMessage('Opening Razorpay checkout...');
 
-        if (window.Cashfree) {
-          const cashfree = window.Cashfree({ mode: 'sandbox' });
-          await cashfree.checkout({
-            paymentSessionId: data.payment_session_id,
-            redirectTarget: '_self'
-          });
-        } else {
-          window.location.href = `payment-success.html?order_id=${encodeURIComponent(data.order_id)}`;
+        if (!window.Razorpay) {
+          throw new Error('Razorpay checkout could not be loaded. Please refresh and try again.');
         }
+
+        const razorpay = new window.Razorpay({
+          key: data.key_id,
+          amount: data.amount_subunits,
+          currency: data.currency,
+          name: 'SlokamTech',
+          description: data.course_name || COURSE_NAME,
+          image: 'logo.jpeg',
+          order_id: data.razorpay_order_id,
+          prefill: data.prefill || { name, email, contact: phone },
+          notes: {
+            course_id: COURSE_ID,
+            course_name: data.course_name || COURSE_NAME
+          },
+          theme: {
+            color: '#f5c542'
+          },
+          handler: async function (paymentResponse) {
+            try {
+              setFormMessage('Confirming payment...');
+              const confirmResponse = await fetch(`${API_BASE_URL}/api/confirm-payment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(paymentResponse)
+              });
+              const confirmData = await confirmResponse.json();
+              if (!confirmResponse.ok || !confirmData.success) {
+                throw new Error(confirmData.error || confirmData.message || 'Payment verification failed.');
+              }
+              window.location.href = `payment-success.html?order_id=${encodeURIComponent(confirmData.razorpay_order_id || paymentResponse.razorpay_order_id)}`;
+            } catch (error) {
+              setFormMessage(error.message || 'Payment verification failed. Please contact support.', true);
+              registerBtn.disabled = false;
+              registerBtn.textContent = 'Register for Workshop • Pay via Razorpay';
+            }
+          },
+          modal: {
+            ondismiss: function () {
+              setFormMessage('Payment was not completed. You can try again when ready.', true);
+              registerBtn.disabled = false;
+              registerBtn.textContent = 'Register for Workshop • Pay via Razorpay';
+            }
+          }
+        });
+
+        razorpay.on('payment.failed', function (response) {
+          const message = response.error && response.error.description
+            ? response.error.description
+            : 'Payment failed. Please try again.';
+          setFormMessage(message, true);
+          registerBtn.disabled = false;
+          registerBtn.textContent = 'Register for Workshop • Pay via Razorpay';
+        });
+
+        razorpay.open();
       } catch (error) {
         setFormMessage(error.message || 'Payment could not be processed. Please try again.', true);
         registerBtn.disabled = false;
-        registerBtn.textContent = 'Register for Workshop • Pay via Cashfree';
+        registerBtn.textContent = 'Register for Workshop • Pay via Razorpay';
       }
     });
   </script>
-  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
